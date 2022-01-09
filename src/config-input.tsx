@@ -15,13 +15,13 @@ const ConfigInput = ({onConfigSet}: {onConfigSet: (c: Config) => void}) => {
   }, [config])
 
   const onSalary = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfig({...config, salary: parseFloat(e.target.value)})
+    setConfig({...config, salary: parseFloat(e.target.value) * 100})
   }
   const onDebt = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfig({...config, debt: parseFloat(e.target.value)})
+    setConfig({...config, debt: parseFloat(e.target.value) * 100})
   }
   const onRepayment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfig({...config, repaymentThreshold: parseFloat(e.target.value)})
+    setConfig({...config, repaymentThreshold: parseFloat(e.target.value) * 100})
   }
   const onInterest = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfig({...config, interest: parseFloat(e.target.value)})
