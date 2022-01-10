@@ -4,7 +4,7 @@ import AnalysisTable from "./analysis-table";
 import ConfigInput from "./config-input";
 import CssBaseline from "@mui/material/CssBaseline";
 import styled from "styled-components";
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 import Section from "./components/Section";
 
 const Container = styled.div`
