@@ -1,9 +1,14 @@
-import { Box, Tabs, Tab, TextField } from "@mui/material";
+import { Box, Tabs, Tab, TextField, Card, CardContent, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import React from "react";
 import { analyse, calculateInvestment, Config } from "./analysis";
 import styled from "styled-components";
 import Section from "./components/Section";
+import ButtonSelector from "./components/ButtonSelector";
+
+enum PaymentSchedule { 
+  Monthly, Anually
+}
 
 const Flex = styled.div`
   display: flex;
@@ -38,6 +43,7 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
   const [currentTab, setCurrentTab] = React.useState(0);
   const [extraAnnualRepayment, setExtraAnnualRepayment] = React.useState(0);
   const [investmentReturn, setInvestmentReturn] = React.useState(0);
+  const [paymentSchedule, setPaymentSchedule] = React.useState(PaymentSchedule.Monthly)
 
   if (!config) return null;
 
@@ -46,11 +52,13 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
     currency: "GBP",
   });
   const result = analyse(config);
-  const compareResult = analyse({ ...config, extraAnnualRepayment });
+
+  const repaymentAmount = paymentSchedule === PaymentSchedule.Monthly ? extraAnnualRepayment * 12 : extraAnnualRepayment
+  const compareResult = analyse({ ...config, extraAnnualRepayment: repaymentAmount });
   const roi =
     extraAnnualRepayment > 0 && investmentReturn > 0
       ? calculateInvestment(
-          extraAnnualRepayment,
+          repaymentAmount,
           investmentReturn,
           result.totalMonths
         )
@@ -58,7 +66,7 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
   const roiCompare =
     extraAnnualRepayment > 0 && investmentReturn > 0
       ? calculateInvestment(
-          extraAnnualRepayment,
+          repaymentAmount,
           investmentReturn,
           result.totalMonths - compareResult.totalMonths
         )
@@ -168,24 +176,30 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
         <Section>
+          <h2>Repayments &amp; Return</h2>
+          <div>
           <TextField
-            label="Extra repayments per year"
+            label="Repayment"
             variant="outlined"
             onChange={handleExtraRepaymentChange}
-          />
+          /> <ButtonSelector initialValue={PaymentSchedule.Anually} options={[{key: "y", title: "Annually", value: PaymentSchedule.Anually}, {key: "m", title: "Monthly", value: PaymentSchedule.Monthly}]} onChange={(o) => setPaymentSchedule(o.value)}/>
+          </div>
+          <div>
           <TextField
-            label="Expected investment return"
+            label="Return"
             variant="outlined"
             onChange={handleInvestmentReturnChange}
           />
+          </div>
+          <h2>Result</h2>
           {roi && roiCompare && (
             <Flex>
-              <div>
-                <p>{result.repayments.length} years to clear loan</p>
-                <p>
-                  {Math.ceil(roi.investmentMonths.length / 12)} years of
-                  investment
-                </p>
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  Prioritise Investing
+                </Typography>
+                <p>{result.repayments.length} years repaying &amp; investing</p>
                 <p>
                   {formatter.format(result.totalInterest / 100)} loan interest
                   cost
@@ -201,13 +215,15 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
                   balance
                 </p>
                 {/* Your loan will take {result.repayments.length} years ({result.totalMonths} in months) to repay and will cost {formatter.format(result.totalInterest / 100)} in interest.*/}
-              </div>
-              <div>
-                <p>{compareResult.repayments.length} years to clear loan</p>
-                <p>
-                  {Math.ceil(roiCompare.investmentMonths.length / 12)} years of
-                  investment
-                </p>
+                </CardContent>
+              </Card>
+              <div>vs</div>
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  Prioritise Loan Repayment
+                </Typography>
+                <p>{compareResult.repayments.length} years repaying, then {Math.floor(roiCompare.investmentMonths.length / 12)} years investing</p>
                 <p>
                   {formatter.format(compareResult.totalInterest / 100)} loan
                   interest cost
@@ -224,8 +240,11 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
                   balance
                 </p>
                 {/* Over {roi.investmentMonths.length} months you'd make {formatter.format(roi.interestEarned / 100)} in interest with investment balance of {formatter.format(roi.balance / 100)}. */}
-              </div>
-              <div>
+                </CardContent>
+              </Card>
+              <div>=</div>
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
                 {roi.interestEarned -
                   result.totalInterest -
                   (roiCompare.interestEarned - compareResult.totalInterest) >
@@ -259,7 +278,8 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
                   </>
                 )}
                 {/* If you used the your investment money you'd repay your loan in {compareResult.repayments.length} years ({result.repayments.length - compareResult.repayments.length} years early), saving {formatter.format((result.totalInterest - compareResult.totalInterest) / 100)} in interest. */}
-              </div>
+                </CardContent>
+              </Card>
             </Flex>
           )}
         </Section>
