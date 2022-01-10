@@ -24,11 +24,12 @@ interface YearSummary {
 interface Result {
   repayments: YearSummary[];
   totalInterest: number;
+  totalMonths: number;
 }
 
 export function analyse(config: Config): Result {
   if (config.salary <= config.repaymentThreshold) {
-    return { repayments: [], totalInterest: 0 };
+    return { repayments: [], totalInterest: 0, totalMonths: 0 };
   }
   const monthlySalaryRepayment =
     ((config.salary - config.repaymentThreshold) / 12) * 0.09;
@@ -40,6 +41,7 @@ export function analyse(config: Config): Result {
   let month = 1;
   let totalInterest = 0;
   let totalRepayments = 0;
+  let totalMonths = 0;
 
   while (remainingDebt > 0) {
     // Add interest
@@ -82,6 +84,8 @@ export function analyse(config: Config): Result {
     } else {
       month++;
     }
+
+    totalMonths++;
   }
 
   return {
@@ -89,9 +93,57 @@ export function analyse(config: Config): Result {
     totalInterest: yearSummary
       .map((r) => r.totalInterest)
       .reduce((a, c) => a + c, 0),
+    totalMonths,
   };
 }
 
-export function calculateInvestment(invest: number, interst: number, years: number): number {
-  return Array.from(Array(years)).reduce((prev) => (prev * interst) + invest, 0) - (invest * years);
+interface InvestmentMonth {
+  balance: number;
+  ytdInvested: number;
+  ytdInterestEarned: number;
+  interstThisMonth: number;
+}
+
+interface InvestmentResult {
+  investmentMonths: InvestmentMonth[];
+  balance: number;
+  invested: number;
+  interestEarned: number;
+}
+
+export function calculateInvestment(
+  invest: number,
+  interest: number,
+  months: number
+): InvestmentResult {
+  const monthlyInvestment = invest / MONTHS_IN_YEAR;
+
+  const investmentMonths: InvestmentMonth[] = [];
+  let balance = 0;
+  let invested = 0;
+  let totalInterestEarned = 0;
+
+  for (let i = 0; i < months; i++) {
+    invested += monthlyInvestment;
+    balance += monthlyInvestment;
+
+    const interestEarned = (balance * interest) / MONTHS_IN_YEAR;
+    totalInterestEarned += interestEarned;
+
+    balance += interestEarned;
+
+    investmentMonths.push({
+      balance: Math.round(balance),
+      ytdInvested: Math.round(invested),
+      ytdInterestEarned: Math.round(totalInterestEarned),
+      interstThisMonth: Math.round(interestEarned),
+    });
+  }
+
+  return {
+    investmentMonths,
+    balance: Math.round(balance),
+    invested: Math.round(invested),
+    interestEarned: Math.round(totalInterestEarned),
+  };
 }

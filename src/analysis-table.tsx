@@ -47,8 +47,22 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
   });
   const result = analyse(config);
   const compareResult = analyse({ ...config, extraAnnualRepayment });
-  const roi = (extraAnnualRepayment > 0 && investmentReturn > 0) ? calculateInvestment(extraAnnualRepayment, investmentReturn, result.repayments.length) : 0
-  
+  const roi =
+    extraAnnualRepayment > 0 && investmentReturn > 0
+      ? calculateInvestment(
+          extraAnnualRepayment,
+          investmentReturn,
+          result.totalMonths
+        )
+      : undefined;
+  const roiCompare =
+    extraAnnualRepayment > 0 && investmentReturn > 0
+      ? calculateInvestment(
+          extraAnnualRepayment,
+          investmentReturn,
+          result.totalMonths - compareResult.totalMonths
+        )
+      : undefined;
 
   const rows: GridRowsProp = result.repayments.map((r, i) => {
     return {
@@ -82,6 +96,26 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
     { field: "col2", headerName: "Repayment", width: 100 },
     { field: "col3", headerName: "Interest", width: 100 },
     { field: "col4", headerName: "Extra Repayment", width: 100 },
+  ];
+
+  const row3: GridRowsProp = roi
+    ? roi.investmentMonths.map((r, i) => {
+        return {
+          id: i + 1,
+          col1: formatter.format(r.balance / 100),
+          col2: formatter.format(r.interstThisMonth / 100),
+          col3: formatter.format(r.ytdInterestEarned / 100),
+          col4: formatter.format(r.ytdInvested / 100),
+        };
+      })
+    : [];
+
+  const columns3: GridColDef[] = [
+    { field: "id", headerName: "#", width: 25 },
+    { field: "col1", headerName: "Balance", width: 100 },
+    { field: "col2", headerName: "Interest", width: 100 },
+    { field: "col3", headerName: "YTD Interest", width: 100 },
+    { field: "col4", headerName: "TTD Invested", width: 100 },
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, value: number) => {
@@ -144,15 +178,105 @@ const AnalysisTable = ({ config }: { config?: Config }) => {
             variant="outlined"
             onChange={handleInvestmentReturnChange}
           />
-          <p>{formatter.format(roi / 100)}</p>
+          {roi && roiCompare && (
+            <Flex>
+              <div>
+                <p>{result.repayments.length} years to clear loan</p>
+                <p>
+                  {Math.ceil(roi.investmentMonths.length / 12)} years of
+                  investment
+                </p>
+                <p>
+                  {formatter.format(result.totalInterest / 100)} loan interest
+                  cost
+                </p>
+                <p>
+                  {formatter.format(roi.interestEarned / 100)} investment
+                  interest earned
+                </p>
+                <p>
+                  {formatter.format(
+                    (roi.interestEarned - result.totalInterest) / 100
+                  )}{" "}
+                  balance
+                </p>
+                {/* Your loan will take {result.repayments.length} years ({result.totalMonths} in months) to repay and will cost {formatter.format(result.totalInterest / 100)} in interest.*/}
+              </div>
+              <div>
+                <p>{compareResult.repayments.length} years to clear loan</p>
+                <p>
+                  {Math.ceil(roiCompare.investmentMonths.length / 12)} years of
+                  investment
+                </p>
+                <p>
+                  {formatter.format(compareResult.totalInterest / 100)} loan
+                  interest cost
+                </p>
+                <p>
+                  {formatter.format(roiCompare.interestEarned / 100)} investment
+                  interest earned
+                </p>
+                <p>
+                  {formatter.format(
+                    (roiCompare.interestEarned - compareResult.totalInterest) /
+                      100
+                  )}{" "}
+                  balance
+                </p>
+                {/* Over {roi.investmentMonths.length} months you'd make {formatter.format(roi.interestEarned / 100)} in interest with investment balance of {formatter.format(roi.balance / 100)}. */}
+              </div>
+              <div>
+                {roi.interestEarned -
+                  result.totalInterest -
+                  (roiCompare.interestEarned - compareResult.totalInterest) >
+                0 ? (
+                  <>
+                    <p>Focus on Investment!</p>
+                    You'll be{" "}
+                    {formatter.format(
+                      (roi.interestEarned -
+                        result.totalInterest -
+                        (roiCompare.interestEarned -
+                          compareResult.totalInterest)) /
+                        100
+                    )}{" "}
+                    better off.
+                  </>
+                ) : (
+                  <>
+                    <p>Repay Early!</p>
+                    You'll be{" "}
+                    {formatter.format(
+                      Math.abs(
+                        (roi.interestEarned -
+                          result.totalInterest -
+                          (roiCompare.interestEarned -
+                            compareResult.totalInterest)) /
+                          100
+                      )
+                    )}{" "}
+                    better off.
+                  </>
+                )}
+                {/* If you used the your investment money you'd repay your loan in {compareResult.repayments.length} years ({result.repayments.length - compareResult.repayments.length} years early), saving {formatter.format((result.totalInterest - compareResult.totalInterest) / 100)} in interest. */}
+              </div>
+            </Flex>
+          )}
+        </Section>
+        <Section>
+          <Flex>
+            <div style={{ height: 450, width: "100%" }}>
+              <DataGrid rows={row3} columns={columns3} autoPageSize />
+            </div>
+            <div style={{ height: 450, width: "100%" }}>
+              <DataGrid rows={rows2} columns={columns2} autoPageSize />
+            </div>
+          </Flex>
         </Section>
         <Section>
           <Flex>
             <div style={{ height: 450, width: "100%" }}>
               <DataGrid rows={rows} columns={columns} autoPageSize />
-            </div>
-            <div style={{ height: 450, width: "100%" }}>
-              <DataGrid rows={rows2} columns={columns2} autoPageSize />
             </div>
           </Flex>
         </Section>
