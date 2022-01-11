@@ -22,8 +22,8 @@ const Tabs = ({ config }: { config: LoanConfig }) => {
           onChange={handleTabChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Scheduled Repayments" />
-          <Tab label="Should I Repay Early?" />
+          <Tab label="Scheduled" />
+          <Tab label="Repay Early?" />
         </TabsContainer>
       </Box>
 

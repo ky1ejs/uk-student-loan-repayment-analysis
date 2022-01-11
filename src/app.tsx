@@ -9,6 +9,7 @@ import Tabs from "./tabs";
 
 const Container = styled.div`
   margin: auto;
+  padding: 0 34px;
   max-width: 1000px;
 `;
 

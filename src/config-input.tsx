@@ -1,17 +1,22 @@
-import { FormHelperText, InputAdornment, TextField } from "@mui/material";
+import { FormHelperText, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LoanConfig } from "./analysis";
 import styled from "styled-components";
 import MonthSelector from "./components/MonthSelector";
 import PaymentSchedule from "./types/PaymentSchedule";
+import PoundTextField from "./components/PoundTextField";
+import PercentageInput from "./panels/compare-early-repayment/PercentageInput";
+import HelpTooltipButton from "./components/HelpTooltipButton";
+import parsePound from "./util/parse-pound";
+import parsePercentage from "./util/parse-percentage";
 
-const InlineButton = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
+const Flex = styled.div`
+  display: flex;
+  gap: 8px;
+`;
 
-  :hover {
-    color: blue;
-  }
+const InputRow = styled.div`
+  margin: 24px 0;
 `;
 
 interface LoanConfigInputs {
@@ -25,7 +30,7 @@ interface LoanConfigInputs {
 const ConfigInput = ({
   onConfigSet,
 }: {
-  onConfigSet: (c: LoanConfig) => void;
+  onConfigSet: (c?: LoanConfig) => void;
 }) => {
   const [config, setConfig] = useState<LoanConfigInputs>({
     salary: "",
@@ -37,18 +42,6 @@ const ConfigInput = ({
   const [paymentSchedule, setPaymentSchedule] = React.useState(
     PaymentSchedule.Anually
   );
-
-  const parsePound = (value?: string) => {
-    if (!value) return undefined;
-    const parsedValue = parseFloat(value);
-    return parsedValue <= 0 ? undefined : parsedValue * 100;
-  };
-
-  const parsePercentage = (value?: string) => {
-    if (!value) return undefined;
-    const interestString = parseFloat(value);
-    return interestString <= 0 ? undefined : interestString / 100;
-  };
 
   useEffect(() => {
     const debt = parsePound(config.debt);
@@ -72,6 +65,8 @@ const ConfigInput = ({
         interest,
         repaymentPercentage,
       });
+    } else {
+      onConfigSet(undefined);
     }
   }, [config, paymentSchedule]);
 
@@ -79,29 +74,29 @@ const ConfigInput = ({
     return text === "" || !isNaN(parseFloat(text));
   };
 
-  const onSalary = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!validateNumber(e.target.value)) return;
-    setConfig({ ...config, salary: e.target.value });
+  const onSalary = (value: string) => {
+    // if (!validateNumber(value)) return;
+    setConfig({ ...config, salary: value });
   };
 
-  const onDebt = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!validateNumber(e.target.value)) return;
-    setConfig({ ...config, debt: e.target.value });
+  const onDebt = (value: string) => {
+    // if (!validateNumber(e.target.value)) return;
+    setConfig({ ...config, debt: value });
   };
 
-  const onRepayment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!validateNumber(e.target.value)) return;
-    setConfig({ ...config, repaymentThreshold: e.target.value });
+  const onRepayment = (value: string) => {
+    // if (!validateNumber(evalue)) return;
+    setConfig({ ...config, repaymentThreshold: value });
   };
 
-  const onInterest = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!validateNumber(e.target.value)) return;
-    setConfig({ ...config, interest: e.target.value });
+  const onInterest = (value: string) => {
+    if (!validateNumber(value)) return;
+    setConfig({ ...config, interest: value });
   };
 
-  const onRepaymentPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!validateNumber(e.target.value)) return;
-    setConfig({ ...config, repaymentPercentage: e.target.value });
+  const onRepaymentPercentage = (value: string) => {
+    if (!validateNumber(value)) return;
+    setConfig({ ...config, repaymentPercentage: value });
   };
 
   const selectPlan1Threshold = () => {
@@ -119,139 +114,134 @@ const ConfigInput = ({
   return (
     <>
       <h2>Your Income &amp; Loan</h2>
-      <div>
-        <p>Your gross annual salary.</p>
-        <TextField
-          id="salary"
-          label="Salary"
-          type="number"
-          variant="outlined"
-          onChange={onSalary}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          }}
-        />
-        <MonthSelector
-          initialSelection={paymentSchedule}
-          onChange={setPaymentSchedule}
-        />
-      </div>
-      <div>
-        <p>
-          The outstanding balance of your student. You can find this out{" "}
-          <a
-            target="_blank"
-            href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance"
-          >
-            here
-          </a>
-          .
-        </p>
-        <TextField
+      <InputRow>
+        <Flex>
+          <PoundTextField
+            id="salary"
+            label="Gross Salary"
+            onChange={onSalary}
+            value={config.salary}
+          />
+          <MonthSelector
+            initialSelection={paymentSchedule}
+            onChange={setPaymentSchedule}
+          />
+        </Flex>
+      </InputRow>
+      <InputRow>
+        <PoundTextField
           id="debt"
-          label="Loan Balance"
-          type="number"
-          variant="outlined"
+          label="Remaining Loan Balance"
           onChange={onDebt}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          }}
+          value={config.debt}
+          tooltip={
+            <div>
+              The outstanding balance of your loan. You can find this out{" "}
+              <a
+                target="_blank"
+                href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance"
+              >
+                here
+              </a>
+              .
+            </div>
+          }
+          fullWidth
         />
-      </div>
-      <div>
-        <p>
-          This depends on which "Plan" you're on. Check the latest thresholds{" "}
-          <a
-            target="_blank"
-            href="https://www.gov.uk/repaying-your-student-loan/when-you-start-repaying"
-          >
-            here
-          </a>
-          .
-        </p>
-        <TextField
+      </InputRow>
+      <InputRow>
+        <PoundTextField
           id="threshold"
-          label="Salary Threshold"
-          type="number"
-          variant="outlined"
+          label="Repayment Threshold"
           onChange={onRepayment}
           value={config.repaymentThreshold}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          }}
+          tooltip={
+            <div>
+              This depends on which "Plan" you're on. Check the latest
+              thresholds{" "}
+              <a
+                target="_blank"
+                href="https://www.gov.uk/repaying-your-student-loan/when-you-start-repaying"
+              >
+                here
+              </a>
+              .
+            </div>
+          }
+          fullWidth
         />
         <FormHelperText>
-          Defaults:{" "}
-          <InlineButton onClick={selectPlan1Threshold}>Plan 1</InlineButton>,{" "}
-          <InlineButton onClick={selectPlan2Threshold}>Plan 2</InlineButton>,{" "}
-          <InlineButton onClick={selectPlan4Threshold}>Plan 4</InlineButton>{" "}
-          (these were last checked 10th of Jan 2022)
+          Default to:{" "}
+          <ToggleButtonGroup sx={{ marginTop: "8px" }} size="small">
+            <ToggleButton value="plan-1" onClick={selectPlan1Threshold}>
+              Plan 1
+            </ToggleButton>
+            <ToggleButton value="plan-2" onClick={selectPlan2Threshold}>
+              Plan 2
+            </ToggleButton>
+            <ToggleButton value="plan-4" onClick={selectPlan4Threshold}>
+              Plan 4
+            </ToggleButton>
+          </ToggleButtonGroup>{" "}
+          <HelpTooltipButton>
+            <div>These values were last checked 10th of Jan 2022.</div>
+          </HelpTooltipButton>
         </FormHelperText>
-      </div>
-      <div>
-        <p>
-          This depends on your salary, but with a recent change (perhaps{" "}
-          <a href="https://www.gov.uk/government/news/student-loans-interest-rates-and-repayment-threshold-announcement--2">
-            here
-          </a>
-          ) this value seems to be 1.5% for most people. The latest interst
-          information is{" "}
-          <a
-            target="_blank"
-            href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance"
-          >
-            here
-          </a>{" "}
-          and you can find your actual interest rate{" "}
-          <a
-            target="_blank"
-            href="https://www.gov.uk/repaying-your-student-loan/what-you-pay"
-          >
-            here
-          </a>
-          .
-        </p>
-        <TextField
+      </InputRow>
+      <InputRow>
+        <PercentageInput
           id="interest"
           label="Interest"
-          type="number"
-          variant="outlined"
           onChange={onInterest}
           value={config.interest}
-          InputProps={{
-            // This is a hack to force the label to
-            startAdornment: <InputAdornment position="start"></InputAdornment>,
-
-            endAdornment: <InputAdornment position="end">%</InputAdornment>,
-          }}
+          fullWidth
+          tooltip={
+            <div>
+              This depends on your salary, but with a recent change (perhaps{" "}
+              <a href="https://www.gov.uk/government/news/student-loans-interest-rates-and-repayment-threshold-announcement--2">
+                here
+              </a>
+              ) this value seems to be 1.5% for most people. The latest interst
+              information is{" "}
+              <a
+                target="_blank"
+                href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance"
+              >
+                here
+              </a>{" "}
+              and you can find your actual interest rate{" "}
+              <a
+                target="_blank"
+                href="https://www.gov.uk/repaying-your-student-loan/what-you-pay"
+              >
+                here
+              </a>
+              .
+            </div>
+          }
         />
-      </div>
-      <div>
-        <p>
-          This has been 9% for quite some time. Double check this value{" "}
-          <a
-            target="_blank"
-            href="https://www.gov.uk/repaying-your-student-loan/what-you-pay"
-          >
-            here
-          </a>
-          .
-        </p>
-        <TextField
+      </InputRow>
+      <InputRow>
+        <PercentageInput
           id="repayment"
           label="Repayment Percentage"
-          type="number"
-          variant="outlined"
           onChange={onRepaymentPercentage}
           value={config.repaymentPercentage}
-          InputProps={{
-            // This is a hack to force the label to
-            startAdornment: <InputAdornment position="start"></InputAdornment>,
-
-            endAdornment: <InputAdornment position="end">%</InputAdornment>,
-          }}
+          fullWidth
+          tooltip={
+            <div>
+              This has been 9% for quite some time. Double check this value{" "}
+              <a
+                target="_blank"
+                href="https://www.gov.uk/repaying-your-student-loan/what-you-pay"
+              >
+                here
+              </a>
+              .
+            </div>
+          }
         />
-      </div>
+      </InputRow>
     </>
   );
 };
