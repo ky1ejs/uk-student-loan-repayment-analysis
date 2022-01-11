@@ -8,7 +8,8 @@ interface PoundTextFieldProps {
   onChange: (v: string) => void;
   value: string;
   fullWidth?: boolean;
-  tooltip?: JSX.Element;
+  tooltip?: React.ReactNode;
+  hint?: React.ReactNode
 }
 
 const PoundTextField = ({
@@ -18,6 +19,7 @@ const PoundTextField = ({
   value,
   fullWidth,
   tooltip,
+  hint
 }: PoundTextFieldProps) => (
   <TextField
     id={id}
@@ -27,6 +29,7 @@ const PoundTextField = ({
     value={value}
     fullWidth={fullWidth}
     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+    helperText={hint}
     InputProps={{
       startAdornment: <InputAdornment position="start">£</InputAdornment>,
       endAdornment: tooltip && (

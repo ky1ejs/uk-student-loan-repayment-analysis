@@ -1,6 +1,7 @@
-import { FormHelperText, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { FormHelperText, ToggleButton, ToggleButtonGroup, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LoanConfig } from "./analysis";
+import { DatePicker, LocalizationProvider } from '@mui/lab'
 import styled from "styled-components";
 import MonthSelector from "./components/MonthSelector";
 import PaymentSchedule from "./types/PaymentSchedule";
@@ -9,6 +10,7 @@ import PercentageInput from "./panels/compare-early-repayment/PercentageInput";
 import HelpTooltipButton from "./components/HelpTooltipButton";
 import parsePound from "./util/parse-pound";
 import parsePercentage from "./util/parse-percentage";
+import DateAdapter from '@mui/lab/AdapterMoment';
 
 const Flex = styled.div`
   display: flex;
@@ -42,6 +44,7 @@ const ConfigInput = ({
   const [paymentSchedule, setPaymentSchedule] = React.useState(
     PaymentSchedule.Anually
   );
+  const [dateLeftUniversity, setDateLeftUniversity] = React.useState<Date | null>(new Date());
 
   useEffect(() => {
     const debt = parsePound(config.debt);
@@ -134,8 +137,7 @@ const ConfigInput = ({
           label="Remaining Loan Balance"
           onChange={onDebt}
           value={config.debt}
-          tooltip={
-            <div>
+          hint={<>
               The outstanding balance of your loan. You can find this out{" "}
               <a
                 target="_blank"
@@ -144,7 +146,7 @@ const ConfigInput = ({
                 here
               </a>
               .
-            </div>
+              </>
           }
           fullWidth
         />
@@ -168,25 +170,25 @@ const ConfigInput = ({
               .
             </div>
           }
+          hint={<FormHelperText>
+            Default to:{" "}
+            <ToggleButtonGroup size="small">
+              <ToggleButton value="plan-1" onClick={selectPlan1Threshold}>
+                Plan 1
+              </ToggleButton>
+              <ToggleButton value="plan-2" onClick={selectPlan2Threshold}>
+                Plan 2
+              </ToggleButton>
+              <ToggleButton value="plan-4" onClick={selectPlan4Threshold}>
+                Plan 4
+              </ToggleButton>
+            </ToggleButtonGroup>{" "}
+            <HelpTooltipButton>
+              <div>These values were last checked 10th of Jan 2022.</div>
+            </HelpTooltipButton>
+          </FormHelperText>}
           fullWidth
         />
-        <FormHelperText>
-          Default to:{" "}
-          <ToggleButtonGroup sx={{ marginTop: "8px" }} size="small">
-            <ToggleButton value="plan-1" onClick={selectPlan1Threshold}>
-              Plan 1
-            </ToggleButton>
-            <ToggleButton value="plan-2" onClick={selectPlan2Threshold}>
-              Plan 2
-            </ToggleButton>
-            <ToggleButton value="plan-4" onClick={selectPlan4Threshold}>
-              Plan 4
-            </ToggleButton>
-          </ToggleButtonGroup>{" "}
-          <HelpTooltipButton>
-            <div>These values were last checked 10th of Jan 2022.</div>
-          </HelpTooltipButton>
-        </FormHelperText>
       </InputRow>
       <InputRow>
         <PercentageInput
@@ -242,6 +244,17 @@ const ConfigInput = ({
           }
         />
       </InputRow>
+      <LocalizationProvider dateAdapter={DateAdapter}>
+        <DatePicker
+            disableFuture
+            label="Month after finishing University"
+            openTo="year"
+            views={['year', 'month']}
+            value={dateLeftUniversity}
+            onChange={setDateLeftUniversity}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
     </>
   );
 };

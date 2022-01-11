@@ -6,10 +6,10 @@ const Container = styled.div`
   bottom: 0;
   width: 100%;
   margin-top: 20px;
-  height: 70px;
+  height: 90px;
 
-  @media only screen and (max-width: 600px) {
-    height: 110px;
+  @media only screen and (max-width: 800px) {
+    height: 130px;
   }
 `;
 
@@ -71,7 +71,7 @@ const Code = () => (
 );
 
 const NotFinancialAdvice = () => (
-  <>😅 this does not constitute financial advice</>
+  <>⚠️ informational purposes only, not financial advice </>
 );
 
 const MobileFooter = () => (

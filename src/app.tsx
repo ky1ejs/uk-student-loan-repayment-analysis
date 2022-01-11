@@ -17,10 +17,10 @@ const Content = styled.div`
   margin: auto;
   padding: 0 34px;
   max-width: 1000px;
-  padding-bottom: 90px;
+  padding-bottom: 110px;
 
   @media only screen and (max-width: 800px) {
-    padding-bottom: 130px;
+    padding-bottom: 150px;
   }
 `;
 

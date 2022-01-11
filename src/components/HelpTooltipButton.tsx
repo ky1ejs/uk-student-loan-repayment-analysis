@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Help } from "@mui/icons-material";
 import { ClickAwayListener, IconButton, Tooltip } from "@mui/material";
 
-const HelpTooltipButton = ({ children }: { children?: JSX.Element }) => {
+const HelpTooltipButton = ({ children }: { children?: React.ReactNode }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   return (
