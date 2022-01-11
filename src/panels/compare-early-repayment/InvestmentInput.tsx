@@ -44,7 +44,7 @@ const InvestmentInput = ({
 
     if (annualInvestment && expectedAnnualReturn) {
       didUpdateInvestmentConfig({
-        annualInvestment: annualInvestment,
+        annualInvestment: paymentSchedule === PaymentSchedule.Monthly ? annualInvestment * 12 : annualInvestment,
         expectedAnnualReturn: expectedAnnualReturn,
       });
     } else {
