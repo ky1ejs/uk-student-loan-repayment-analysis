@@ -1,41 +1,44 @@
 import React, { Key, useState } from "react";
-import { Button, ButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 interface ButtonSelectorOption<T> {
-  key: Key | null | undefined
+  key: Key;
   title: string;
   value: T;
 }
 
 interface ButtonSelectorProps<T> {
   options: ButtonSelectorOption<T>[];
-  onChange: (option: ButtonSelectorOption<T>) => void;
-  initialValue?: T
+  onChange: (option: T) => void;
+  initialSelection?: T;
 }
 
 function ButtonSelector<T>(props: ButtonSelectorProps<T>) {
-  const {options, onChange, initialValue} = props;
+  const { options, onChange, initialSelection } = props;
+  const [selectedValue, setSelectedValue] = useState<T | undefined>(
+    initialSelection
+  );
 
-  const [selectedValue, setSelectedValue] = useState<T | undefined>(initialValue);
+  const handleChange = (event: React.MouseEvent<HTMLElement>, selection: T) => {
+    setSelectedValue(selection);
+    onChange(selection);
+  };
 
-  const updateSelected = (option: ButtonSelectorOption<T>) => {
-    setSelectedValue(option.value);
-    onChange(option);
+  const control = {
+    value: selectedValue,
+    onChange: handleChange,
+    exclusive: true,
   };
 
   return (
-    <ButtonGroup>
-      {options.map(o => (
-        <Button
-          key={o.key}
-          variant={o.value === selectedValue ? "contained" : "outlined"}
-          onClick={() => {
-            updateSelected(o);
-          }}
-        >{o.title}</Button>
+    <ToggleButtonGroup size="small" {...control}>
+      {options.map((o) => (
+        <ToggleButton value={o.value} key={o.key}>
+          {o.title}
+        </ToggleButton>
       ))}
-    </ButtonGroup>
+    </ToggleButtonGroup>
   );
-};
+}
 
 export default ButtonSelector;

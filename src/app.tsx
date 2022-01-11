@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Config } from "./analysis";
-import AnalysisTable from "./analysis-table";
+import { LoanConfig } from "./analysis";
 import ConfigInput from "./config-input";
 import CssBaseline from "@mui/material/CssBaseline";
 import styled from "styled-components";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import Section from "./components/Section";
+import Tabs from "./tabs";
 
 const Container = styled.div`
   margin: auto;
@@ -13,9 +13,9 @@ const Container = styled.div`
 `;
 
 const App = () => {
-  const [config, setConfig] = useState<Config | undefined>(undefined);
+  const [config, setConfig] = useState<LoanConfig | undefined>(undefined);
 
-  const onConfigSet = (c?: Config) => {
+  const onConfigSet = (c?: LoanConfig) => {
     setConfig(c);
   };
 
@@ -32,9 +32,7 @@ const App = () => {
         <Section>
           <ConfigInput onConfigSet={onConfigSet} />
         </Section>
-        <Section>
-          <AnalysisTable config={config} />
-        </Section>
+        <Section>{config && <Tabs config={config} />}</Section>
       </Container>
     </CssBaseline>
   );

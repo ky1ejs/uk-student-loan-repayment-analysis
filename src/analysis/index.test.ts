@@ -10,7 +10,10 @@ test("Investing 1k (annual) over 1 month earns 28p interest", () => {
   // For one month
   const months = 1;
 
-  const result = calculateInvestment(investment, interest, months);
+  const result = calculateInvestment(
+    { annualInvestment: investment, expectedAnnualReturn: interest },
+    months
+  );
 
   // 28p interest
   const expected = 28;
@@ -28,7 +31,10 @@ test("Investing 10k (annual) over 2 months earns", () => {
   // For two months
   const months = 2;
 
-  const result = calculateInvestment(investment, interest, months);
+  const result = calculateInvestment(
+    { annualInvestment: investment, expectedAnnualReturn: interest },
+    months
+  );
 
   // £8.34 interest
   const expected = 834;
@@ -46,7 +52,10 @@ test("Investing 10k (annual) over 36 months earns", () => {
   // For two months
   const months = 36;
 
-  const result = calculateInvestment(investment, interest, months);
+  const result = calculateInvestment(
+    { annualInvestment: investment, expectedAnnualReturn: interest },
+    months
+  );
 
   // £1,924.03 interest
   const expected = 192403;

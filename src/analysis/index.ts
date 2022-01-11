@@ -1,8 +1,11 @@
+import InvestmentConfig from "../types/InvestmentConfig";
+
 const MONTHS_IN_YEAR = 12;
 
-export interface Config {
+export interface LoanConfig {
   salary: number;
   repaymentThreshold: number;
+  repaymentPercentage: number;
   debt: number;
   interest: number;
   extraAnnualRepayment?: number;
@@ -21,18 +24,21 @@ interface YearSummary {
   balance: number;
 }
 
-interface Result {
+export interface LoanRepaymentResult {
   repayments: YearSummary[];
   totalInterest: number;
   totalMonths: number;
 }
 
-export function analyse(config: Config): Result {
+export function calculateLoanRepayment(
+  config: LoanConfig
+): LoanRepaymentResult {
   if (config.salary <= config.repaymentThreshold) {
     return { repayments: [], totalInterest: 0, totalMonths: 0 };
   }
   const monthlySalaryRepayment =
-    ((config.salary - config.repaymentThreshold) / 12) * 0.09;
+    ((config.salary - config.repaymentThreshold) / 12) *
+    config.repaymentPercentage;
 
   let { debt: remainingDebt } = config;
 
@@ -70,7 +76,6 @@ export function analyse(config: Config): Result {
     totalRepayments += repay;
 
     if (month >= MONTHS_IN_YEAR || remainingDebt <= 0) {
-      console.log(totalRepayments);
       yearSummary.push({
         repayments,
         totalInterest,
@@ -104,7 +109,7 @@ interface InvestmentMonth {
   interstThisMonth: number;
 }
 
-interface InvestmentResult {
+export interface InvestmentPerformance {
   investmentMonths: InvestmentMonth[];
   balance: number;
   invested: number;
@@ -112,10 +117,11 @@ interface InvestmentResult {
 }
 
 export function calculateInvestment(
-  invest: number,
-  interest: number,
+  investment: InvestmentConfig,
   months: number
-): InvestmentResult {
+): InvestmentPerformance {
+  const { annualInvestment: invest, expectedAnnualReturn: interest } =
+    investment;
   const monthlyInvestment = invest / MONTHS_IN_YEAR;
 
   const investmentMonths: InvestmentMonth[] = [];
