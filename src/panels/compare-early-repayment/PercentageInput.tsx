@@ -31,10 +31,9 @@ const PercentageInput = ({
       // This is a hack to force the label to
       startAdornment: <InputAdornment position="start"></InputAdornment>,
 
-      endAdornment: tooltip && (
+      endAdornment: (
         <InputAdornment position="end">
-          %
-          <HelpTooltipButton children={tooltip} />
+          %{tooltip && <HelpTooltipButton children={tooltip} />}
         </InputAdornment>
       ),
     }}

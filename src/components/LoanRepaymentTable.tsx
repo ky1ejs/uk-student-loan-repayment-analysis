@@ -25,7 +25,7 @@ const LoanRepaymentTable = ({
   ];
 
   return (
-    <div style={{ height: 450, width: "100%" }}>
+    <div style={{ height: 400, width: "100%" }}>
       <DataGrid rows={rows} columns={columns} autoPageSize />
     </div>
   );

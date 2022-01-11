@@ -4,6 +4,7 @@ import InvestmentConfig from "../../types/InvestmentConfig";
 import InvestmentInput from "./InvestmentInput";
 import EarlyRepaymentVsInvestmentAnalysisResult from "./EarlyRepaymentVsInvestmentAnalysisResult";
 import Section from "../../components/Section";
+import ResultsPlaceholder from "./ResultsPlaceholder";
 
 const CompareEarlyRepaymentWithInvestment = ({
   loanRepayment,
@@ -33,7 +34,7 @@ const CompareEarlyRepaymentWithInvestment = ({
           investmentConfig={investmentConfig}
         />
       ) : (
-        <>Please input your investment plans.</>
+        <ResultsPlaceholder />
       )}
     </>
   );
