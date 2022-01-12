@@ -1,21 +1,20 @@
 import React from "react";
 import { LoanConfig, LoanRepaymentResult } from "../../analysis";
-import InvestmentConfig from "../../types/InvestmentConfig";
 import InvestmentInput from "./InvestmentInput";
 import EarlyRepaymentVsInvestmentAnalysisResult from "./EarlyRepaymentVsInvestmentAnalysisResult";
 import Section from "../../components/Section";
-import ResultsPlaceholder from "./ResultsPlaceholder";
+import InvestmentConfigInput from "../../types/InvestmentInput";
 
 const CompareEarlyRepaymentWithInvestment = ({
   loanRepayment,
   loanConfig,
-  investmentConfig,
+  investmentConfigInput,
   setInvestmentConfig,
 }: {
   loanRepayment: LoanRepaymentResult;
   loanConfig: LoanConfig;
-  investmentConfig?: InvestmentConfig;
-  setInvestmentConfig: (c?: InvestmentConfig) => void;
+  investmentConfigInput: InvestmentConfigInput;
+  setInvestmentConfig: (c: InvestmentConfigInput) => void;
 }) => (
   <>
     <Section>
@@ -26,18 +25,13 @@ const CompareEarlyRepaymentWithInvestment = ({
     </Section>
     <InvestmentInput
       didUpdateInvestmentConfig={setInvestmentConfig}
-      initialValues={{ ...investmentConfig }}
+      investmentConfigInput={investmentConfigInput}
     />
-
-    {investmentConfig ? (
-      <EarlyRepaymentVsInvestmentAnalysisResult
-        loanRepayment={loanRepayment}
-        loanConfig={loanConfig}
-        investmentConfig={investmentConfig}
-      />
-    ) : (
-      <ResultsPlaceholder />
-    )}
+    <EarlyRepaymentVsInvestmentAnalysisResult
+      loanRepayment={loanRepayment}
+      loanConfig={loanConfig}
+      investmentConfigInput={investmentConfigInput}
+    />
   </>
 );
 

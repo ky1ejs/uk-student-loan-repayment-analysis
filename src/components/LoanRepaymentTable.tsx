@@ -23,7 +23,7 @@ const LoanRepaymentTable = ({
     { field: "col1", headerName: "Balance", width: 120 },
     { field: "col2", headerName: "Repayment", width: 120 },
     { field: "col3", headerName: "Interest", width: 120 },
-    { field: "col4", headerName: "Interest (YTD)", width: 140 },
+    { field: "col4", headerName: "Total Interest", width: 140 },
   ];
 
   return (

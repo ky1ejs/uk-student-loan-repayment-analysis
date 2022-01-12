@@ -7,7 +7,8 @@ import { AppBar, Toolbar, Typography } from "@mui/material";
 import Section from "./components/Section";
 import Tabs from "./tabs";
 import Footer from "./components/Footer";
-import InvestmentConfig from "./types/InvestmentConfig";
+import InvestmentConfigInput from "./types/InvestmentInput";
+import AnnuallyOrMonthly from "./types/AnnuallyOrMonthly";
 
 const Page = styled.div`
   position: relative;
@@ -25,9 +26,13 @@ const App = () => {
   const [loanConfig, setLoanConfig] = useState<LoanConfig | undefined>(
     undefined
   );
-  const [investmentConfig, setInvestmentConfig] = useState<
-    InvestmentConfig | undefined
-  >(undefined);
+  const [investmentConfig, setInvestmentConfig] =
+    useState<InvestmentConfigInput>({
+      investment: "",
+      expectedAnnualReturn: "",
+      investmentFrequency: AnnuallyOrMonthly.Monthly,
+      investLoanPayments: true,
+    });
 
   return (
     <CssBaseline>

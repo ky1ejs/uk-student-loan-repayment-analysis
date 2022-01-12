@@ -1,16 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AnnuallyOrMonthlySelector from "../../components/AnnuallyOrMonthlySelector";
 import PoundTextField from "../../components/PoundTextField";
 import Section from "../../components/Section";
-import InvestmentConfig from "../../types/InvestmentConfig";
-import AnnuallyOrMonthly from "../../types/AnnuallyOrMonthly";
-import {
-  stringToPercentage,
-  percentageToString,
-} from "../../util/parse-percentage";
-import { stringToPennies, penniesToString } from "../../util/parse-pound";
 import PercentageInput from "./PercentageInput";
 import styled from "styled-components";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import HelpTooltipButton from "../../components/HelpTooltipButton";
+import InvestmentConfigInput from "../../types/InvestmentInput";
 
 const Flex = styled.div`
   display: flex;
@@ -21,52 +17,21 @@ const InputRow = styled.div`
   margin: 24px 0;
 `;
 
-interface InvestmentConfigInputs {
-  investment: string;
-  expectedAnnualReturn: string;
-  investmentFrequency: AnnuallyOrMonthly;
-}
-
 interface InvetmentInputProps {
-  didUpdateInvestmentConfig: (config?: InvestmentConfig) => void;
-  initialValues: Partial<InvestmentConfig>;
+  didUpdateInvestmentConfig: (config: InvestmentConfigInput) => void;
+  investmentConfigInput: InvestmentConfigInput;
 }
 
 const InvestmentInput = ({
   didUpdateInvestmentConfig,
-  initialValues,
+  investmentConfigInput: config,
 }: InvetmentInputProps) => {
-  const [config, setConfig] = React.useState<InvestmentConfigInputs>({
-    investment: penniesToString(initialValues.investment) ?? "",
-    expectedAnnualReturn:
-      percentageToString(initialValues.expectedAnnualReturn) ?? "",
-    investmentFrequency:
-      initialValues.investmentFrequency ?? AnnuallyOrMonthly.Monthly,
-  });
-
-  useEffect(() => {
-    const investment = stringToPennies(config.investment);
-    const expectedAnnualReturn = stringToPercentage(
-      config.expectedAnnualReturn
-    );
-
-    if (investment && expectedAnnualReturn) {
-      didUpdateInvestmentConfig({
-        investment,
-        expectedAnnualReturn,
-        investmentFrequency: config.investmentFrequency,
-      });
-    } else {
-      didUpdateInvestmentConfig(undefined);
-    }
-  }, [config]);
-
   const handleInvestmentChange = (value: string) => {
-    setConfig({ ...config, investment: value });
+    didUpdateInvestmentConfig({ ...config, investment: value });
   };
 
   const handleReturnChange = (value: string) => {
-    setConfig({ ...config, expectedAnnualReturn: value });
+    didUpdateInvestmentConfig({ ...config, expectedAnnualReturn: value });
   };
 
   return (
@@ -84,7 +49,7 @@ const InvestmentInput = ({
           <AnnuallyOrMonthlySelector
             initialSelection={config.investmentFrequency}
             onChange={(investmentFrequency) =>
-              setConfig({ ...config, investmentFrequency })
+              didUpdateInvestmentConfig({ ...config, investmentFrequency })
             }
           />
         </Flex>
@@ -98,6 +63,26 @@ const InvestmentInput = ({
           fullWidth
         />
       </InputRow>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={config.investLoanPayments}
+            onChange={(e, checked) =>
+              didUpdateInvestmentConfig({
+                ...config,
+                investLoanPayments: checked,
+              })
+            }
+          />
+        }
+        label="Invest loan repayments after loan is repayed"
+      />
+      <HelpTooltipButton>
+        If checked, we'll add your loan repayments to your investment deposit
+        once your loan is fully repaid. In other words, when you've finished
+        repaying your loan, would you like to invest the money you were paying
+        to your loan?
+      </HelpTooltipButton>
     </Section>
   );
 };

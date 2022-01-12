@@ -13,6 +13,10 @@ import {
 } from "../../analysis";
 import styled from "styled-components";
 import AnnuallyOrMonthly from "../../types/AnnuallyOrMonthly";
+import InvestmentConfigInput from "../../types/InvestmentInput";
+import { stringToPennies } from "../../util/parse-pound";
+import { stringToPercentage } from "../../util/parse-percentage";
+import ResultsPlaceholder from "./ResultsPlaceholder";
 
 const Flex = styled.div`
   display: flex;
@@ -26,14 +30,30 @@ const Flex = styled.div`
 interface EarlyRepaymentVsInvestmentAnalysisResultProps {
   loanRepayment: LoanRepaymentResult;
   loanConfig: LoanConfig;
-  investmentConfig: InvestmentConfig;
+  investmentConfigInput: InvestmentConfigInput;
 }
 
 const EarlyRepaymentVsInvestmentAnalysisResult = ({
   loanRepayment,
   loanConfig,
-  investmentConfig,
+  investmentConfigInput,
 }: EarlyRepaymentVsInvestmentAnalysisResultProps) => {
+  const investmentAmount = stringToPennies(investmentConfigInput.investment);
+  const expectedAnnualReturn = stringToPercentage(
+    investmentConfigInput.expectedAnnualReturn
+  );
+
+  let investmentConfig: InvestmentConfig | undefined = undefined;
+  if (investmentAmount && expectedAnnualReturn) {
+    investmentConfig = {
+      investment: investmentAmount,
+      expectedAnnualReturn,
+      investmentFrequency: investmentConfigInput.investmentFrequency,
+    };
+  } else {
+    return <ResultsPlaceholder />;
+  }
+
   const investment: RepaymentAndInvestment = {
     investmentPerformance: calculateInvestment(
       investmentConfig,
@@ -53,9 +73,10 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
     investmentPerformance: calculateInvestment(
       {
         ...investmentConfig,
-        investment:
-          investmentConfig.investment +
-          earlyLoanReplayment.monthlySalaryPayment,
+        investment: investmentConfigInput.investLoanPayments
+          ? investmentConfig.investment +
+            earlyLoanReplayment.monthlySalaryPayment
+          : investmentConfig.investment,
       },
       loanRepayment.totalMonths - earlyLoanReplayment.totalMonths
     ),
@@ -66,9 +87,7 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
 
   const comparison =
     investment.investmentPerformance.balance -
-    investment.loanRepayment.totalPayments -
-    (repayment.investmentPerformance.balance -
-      repayment.loanRepayment.totalPayments);
+    repayment.investmentPerformance.balance;
 
   const red = "#ffd2cb";
   const green = "#87ffd0";

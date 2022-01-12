@@ -30,13 +30,7 @@ const PrioritiseRepaymentCard = ({
     </p>
     <p>
       {formatPennies(investmentPerformance.balance)} in your savings (
-      {formatPennies(investmentPerformance.interestEarned)} earned in interest)
-    </p>
-    <p>
-      {formatPennies(
-        investmentPerformance.interestEarned - loanRepayment.totalInterestPaid
-      )}{" "}
-      balance
+      {formatPennies(investmentPerformance.interestEarned)} interest)
     </p>
     {/* Over {roi.investmentMonths.length} months you'd make {formatter.format(roi.interestEarned / 100)} in interest with investment balance of {formatter.format(roi.balance / 100)}. */}
   </Card>

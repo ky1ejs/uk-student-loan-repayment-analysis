@@ -20,13 +20,7 @@ const PrioritiseInvestmentCard = ({
     </p>
     <p>
       {formatPennies(investmentPerformance.balance)} in your savings (
-      {formatPennies(investmentPerformance.interestEarned)} earned in interest)
-    </p>
-    <p>
-      {formatPennies(
-        investmentPerformance.interestEarned - loanRepayment.totalInterestPaid
-      )}{" "}
-      balance
+      {formatPennies(investmentPerformance.interestEarned)} interest)
     </p>
     {/* Your loan will take {result.repayments.length} years ({result.totalMonths} in months) to repay and will cost {formatter.format(result.totalInterest / 100)} in interest.*/}
   </Card>

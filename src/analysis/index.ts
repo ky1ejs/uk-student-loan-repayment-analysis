@@ -84,10 +84,8 @@ export function calculateLoanRepayment(
   let totalSalaryPayments = 0;
   let totalVoluntaryPayments = 0;
 
-  let totalMonths = moment(new Date()).diff(
-    moment(config.monthAfterLeavingUni),
-    "months",
-    true
+  let totalMonths = Math.floor(
+    moment(new Date()).diff(moment(config.monthAfterLeavingUni), "months", true)
   );
 
   while (

@@ -18,15 +18,25 @@ const RepaymentSchedule = ({
         <>
           {repayment.writtenOff ? (
             <>
-              You'll pay your Student Loan off for{" "}
-              <Bold>
-                {repayment.payments.length} year
-                {repayment.payments.length > 1 ? "s" : ""}
-              </Bold>{" "}
-              and then it will be written off. In that time you'll paid{" "}
-              {formatPennies(repayment.totalPayments)} back,{" "}
-              {formatPennies(repayment.totalInterestPaid)} of which being
-              interest.
+              <p>
+                You'll pay your Student Loan for{" "}
+                <Bold>
+                  {repayment.payments.length} year
+                  {repayment.payments.length > 1 ? "s" : ""}
+                </Bold>{" "}
+                and then it will be written off.
+              </p>
+              <p>
+                In that time you'll{" "}
+                <Bold>
+                  pay a total of {formatPennies(repayment.totalPayments)}
+                </Bold>
+                , with {formatPennies(repayment.totalInterestPaid)} of that
+                being interest.
+              </p>
+              <p>
+                {formatPennies(repayment.amountWrittenOff)} will be written off.
+              </p>
             </>
           ) : (
             <>

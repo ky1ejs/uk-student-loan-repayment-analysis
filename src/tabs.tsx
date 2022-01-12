@@ -4,13 +4,13 @@ import { calculateLoanRepayment, LoanConfig } from "./analysis";
 import TabPanel from "./components/TabPanel";
 import CompareEarlyRepaymentWithInvestment from "./panels/compare-early-repayment";
 import RepaymentSchedule from "./panels/repayment-schedule";
-import InvestmentConfig from "./types/InvestmentConfig";
 import ResultsPlaceholder from "./panels/compare-early-repayment/ResultsPlaceholder";
+import InvestmentConfigInput from "./types/InvestmentInput";
 
 interface TabsProps {
   loanConfig?: LoanConfig;
-  investmentConfig?: InvestmentConfig;
-  setInvestmentConfig: (c?: InvestmentConfig) => void;
+  investmentConfig: InvestmentConfigInput;
+  setInvestmentConfig: (c: InvestmentConfigInput) => void;
 }
 
 const Tabs = ({
@@ -53,7 +53,7 @@ const Tabs = ({
           <CompareEarlyRepaymentWithInvestment
             loanRepayment={loanRepayment}
             loanConfig={loanConfig}
-            investmentConfig={investmentConfig}
+            investmentConfigInput={investmentConfig}
             setInvestmentConfig={setInvestmentConfig}
           />
         ) : (

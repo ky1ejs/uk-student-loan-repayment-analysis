@@ -29,6 +29,7 @@ interface LoanConfigInputs {
   debt: string;
   interest: string;
   repaymentPercentage: string;
+  dateLeftUniversity: Date;
 }
 
 const ConfigInput = ({
@@ -42,12 +43,10 @@ const ConfigInput = ({
     debt: "",
     interest: SfeConstants.INTEREST,
     repaymentPercentage: SfeConstants.SALARY_PERCENTAGE,
+    dateLeftUniversity: new Date(),
   });
   const [paymentSchedule, setPaymentSchedule] = React.useState(
     AnnuallyOrMonthly.Anually
-  );
-  const [dateLeftUniversity, setDateLeftUniversity] = React.useState<Date>(
-    new Date()
   );
 
   useEffect(() => {
@@ -71,7 +70,7 @@ const ConfigInput = ({
         repaymentThreshold,
         interest,
         repaymentPercentage,
-        monthAfterLeavingUni: dateLeftUniversity,
+        monthAfterLeavingUni: config.dateLeftUniversity,
       });
     } else {
       onConfigSet(undefined);
@@ -259,15 +258,20 @@ const ConfigInput = ({
           label="Month after finishing University"
           openTo="year"
           views={["year", "month"]}
-          value={dateLeftUniversity}
-          onChange={(d) => setDateLeftUniversity(d ?? new Date())}
+          value={config.dateLeftUniversity}
+          onChange={(d) => {
+            const date = d ? d?.toDate() : new Date();
+            setConfig({ ...config, dateLeftUniversity: date });
+          }}
           inputFormat="M/yyyy"
           reduceAnimations
+          maxDate={moment(new Date())}
+          minDate={moment(new Date()).subtract(30, "years")}
           renderInput={(params) => (
             <TextField
               fullWidth
               {...params}
-              helperText={moment(dateLeftUniversity).format("MMMM yyyy")}
+              helperText={moment(config.dateLeftUniversity).format("MMMM yyyy")}
             />
           )}
         />
