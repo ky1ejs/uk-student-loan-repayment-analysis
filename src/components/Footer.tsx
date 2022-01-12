@@ -5,7 +5,7 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 60px;
   height: 135px;
 `;
 const Center = styled.div`
@@ -13,12 +13,13 @@ const Center = styled.div`
   max-width: 1000px;
 `;
 
-const LightGrey = styled.p`
+const LightText = styled.p`
   color: #9fa1a0;
+  font-size: 10pt;
 `;
 
 const GitHubIcon = styled.p`
-  padding-top: 6px;
+  padding-top: 14px;
 
   svg:hover {
     fill: #656766;
@@ -46,9 +47,9 @@ const MadeByKyle = () => (
 );
 
 const Copyright = () => (
-  <LightGrey>
+  <LightText>
     &copy; Copyright {new Date().getFullYear()} Kyle McAlpine
-  </LightGrey>
+  </LightText>
 );
 
 const Code = () => (
@@ -66,7 +67,7 @@ const Code = () => (
 );
 
 const NotFinancialAdvice = () => (
-  <LightGrey>informational purposes only, not financial advice </LightGrey>
+  <LightText>informational purposes only, not financial advice </LightText>
 );
 
 const Footer = () => (

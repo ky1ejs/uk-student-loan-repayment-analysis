@@ -17,7 +17,7 @@ const Content = styled.div`
   margin: auto;
   padding: 0 34px;
   max-width: 1000px;
-  padding-bottom: 135px;
+  padding-bottom: 195px;
 `;
 
 const App = () => {
