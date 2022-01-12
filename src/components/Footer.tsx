@@ -55,7 +55,7 @@ const Copyright = () => (
 const Code = () => (
   <GitHubIcon>
     <a href="https://github.com/kylejm/uk-student-loan-repayment-analysis">
-      <svg height="3ch" width="3ch" viewBox="10 10 30 30" aria-hidden="true">
+      <svg height="30px" width="30px" viewBox="10 10 30 30" aria-hidden="true">
         <path
           fillRule="evenodd"
           clipRule="evenodd"

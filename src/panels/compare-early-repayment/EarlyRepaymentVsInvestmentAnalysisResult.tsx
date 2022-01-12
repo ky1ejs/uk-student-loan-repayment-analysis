@@ -43,7 +43,7 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
 
   const earlyLoanReplayment = calculateLoanRepayment({
     ...loanConfig,
-    extraAnnualRepayment: investmentConfig.annualInvestment,
+    extraAnnualRepayment: investmentConfig.investment,
   });
   const repayment: RepaymentAndInvestment = {
     investmentPerformance: calculateInvestment(

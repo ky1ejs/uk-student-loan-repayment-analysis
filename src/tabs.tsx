@@ -4,15 +4,19 @@ import { calculateLoanRepayment, LoanConfig } from "./analysis";
 import TabPanel from "./components/TabPanel";
 import CompareEarlyRepaymentWithInvestment from "./panels/compare-early-repayment";
 import RepaymentSchedule from "./panels/repayment-schedule";
+import InvestmentConfig from "./types/InvestmentConfig";
+import ResultsPlaceholder from "./panels/compare-early-repayment/ResultsPlaceholder";
 
-const Tabs = ({ config }: { config: LoanConfig }) => {
+interface TabsProps { loanConfig?: LoanConfig, investmentConfig?: InvestmentConfig, setInvestmentConfig: (c?: InvestmentConfig) => void }
+
+const Tabs = ({ loanConfig, investmentConfig, setInvestmentConfig }: TabsProps) => {
   const [currentTab, setCurrentTab] = React.useState(0);
-
-  const loanRepayment = calculateLoanRepayment(config);
 
   const handleTabChange = (event: React.SyntheticEvent, value: number) => {
     setCurrentTab(value);
   };
+
+  const loanRepayment = loanConfig ? calculateLoanRepayment(loanConfig) : undefined;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -28,13 +32,15 @@ const Tabs = ({ config }: { config: LoanConfig }) => {
       </Box>
 
       <TabPanel currentTab={currentTab} index={0}>
-        <RepaymentSchedule repayment={loanRepayment} />
+        {loanRepayment ? <RepaymentSchedule repayment={loanRepayment} /> : <ResultsPlaceholder/>}
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
-        <CompareEarlyRepaymentWithInvestment
+        {loanConfig && loanRepayment ? <CompareEarlyRepaymentWithInvestment
           loanRepayment={loanRepayment}
-          loanConfig={config}
-        />
+          loanConfig={loanConfig}
+          investmentConfig={investmentConfig}
+          setInvestmentConfig={setInvestmentConfig}
+        /> : <ResultsPlaceholder/>}
       </TabPanel>
     </Box>
   );

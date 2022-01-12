@@ -120,7 +120,7 @@ export function calculateInvestment(
   investment: InvestmentConfig,
   months: number
 ): InvestmentPerformance {
-  const { annualInvestment: invest, expectedAnnualReturn: interest } =
+  const { investment: invest, expectedAnnualReturn: interest } =
     investment;
   const monthlyInvestment = invest / MONTHS_IN_YEAR;
 

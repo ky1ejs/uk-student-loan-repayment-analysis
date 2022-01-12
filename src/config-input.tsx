@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { LoanConfig } from "./analysis";
 import { DatePicker, LocalizationProvider } from "@mui/lab";
 import styled from "styled-components";
-import MonthSelector from "./components/MonthSelector";
-import PaymentSchedule from "./types/PaymentSchedule";
+import AnnuallyOrMonthlySelector from "./components/AnnuallyOrMonthlySelector";
+import AnnuallyOrMonthly from "./types/AnnuallyOrMonthly";
 import PoundTextField from "./components/PoundTextField";
 import PercentageInput from "./panels/compare-early-repayment/PercentageInput";
 import HelpTooltipButton from "./components/HelpTooltipButton";
-import parsePound from "./util/parse-pound";
-import parsePercentage from "./util/parse-percentage";
+import { stringToPennies } from "./util/parse-pound";
+import { stringToPercentage } from "./util/parse-percentage";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import moment from "moment";
 
@@ -43,17 +43,17 @@ const ConfigInput = ({
     repaymentPercentage: "9",
   });
   const [paymentSchedule, setPaymentSchedule] = React.useState(
-    PaymentSchedule.Anually
+    AnnuallyOrMonthly.Anually
   );
   const [dateLeftUniversity, setDateLeftUniversity] =
     React.useState<Date | null>(new Date());
 
   useEffect(() => {
-    const debt = parsePound(config.debt);
-    const repaymentThreshold = parsePound(config.repaymentThreshold);
-    const salary = parsePound(config.salary);
-    const interest = parsePercentage(config.interest);
-    const repaymentPercentage = parsePercentage(config.repaymentPercentage);
+    const debt = stringToPennies(config.debt);
+    const repaymentThreshold = stringToPennies(config.repaymentThreshold);
+    const salary = stringToPennies(config.salary);
+    const interest = stringToPercentage(config.interest);
+    const repaymentPercentage = stringToPercentage(config.repaymentPercentage);
 
     if (
       debt &&
@@ -65,7 +65,7 @@ const ConfigInput = ({
       onConfigSet({
         debt,
         salary:
-          paymentSchedule === PaymentSchedule.Anually ? salary : salary * 12,
+          paymentSchedule === AnnuallyOrMonthly.Anually ? salary : salary * 12,
         repaymentThreshold,
         interest,
         repaymentPercentage,
@@ -121,9 +121,10 @@ const ConfigInput = ({
             id="salary"
             label="Gross Salary"
             onChange={onSalary}
+            fullWidth
             value={config.salary}
           />
-          <MonthSelector
+          <AnnuallyOrMonthlySelector
             initialSelection={paymentSchedule}
             onChange={setPaymentSchedule}
           />
@@ -251,6 +252,7 @@ const ConfigInput = ({
           value={dateLeftUniversity}
           onChange={setDateLeftUniversity}
           inputFormat="M/yyyy"
+          reduceAnimations
           renderInput={(params) => (
             <TextField
               fullWidth

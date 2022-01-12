@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Typography } from "@mui/material";
 import Section from "./components/Section";
 import Tabs from "./tabs";
 import Footer from "./components/Footer";
+import InvestmentConfig from "./types/InvestmentConfig";
 
 const Page = styled.div`
   position: relative;
@@ -21,11 +22,8 @@ const Content = styled.div`
 `;
 
 const App = () => {
-  const [config, setConfig] = useState<LoanConfig | undefined>(undefined);
-
-  const onConfigSet = (c?: LoanConfig) => {
-    setConfig(c);
-  };
+  const [loanConfig, setLoanConfig] = useState<LoanConfig | undefined>(undefined);
+  const [investmentConfig, setInvestmentConfig] = useState<InvestmentConfig | undefined>(undefined);
 
   return (
     <CssBaseline>
@@ -39,9 +37,9 @@ const App = () => {
         </AppBar>
         <Content>
           <Section>
-            <ConfigInput onConfigSet={onConfigSet} />
+            <ConfigInput onConfigSet={setLoanConfig} />
           </Section>
-          <Section>{config && <Tabs config={config} />}</Section>
+          <Section><Tabs loanConfig={loanConfig} investmentConfig={investmentConfig} setInvestmentConfig={setInvestmentConfig} /></Section>
         </Content>
         <Footer />
       </Page>

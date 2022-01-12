@@ -1,4 +1,5 @@
 import { calculateInvestment } from ".";
+import AnnuallyOrMonthly from "../types/AnnuallyOrMonthly";
 
 test("Investing 1k (annual) over 1 month earns 28p interest", () => {
   // £1,000 as pence over a year
@@ -11,7 +12,7 @@ test("Investing 1k (annual) over 1 month earns 28p interest", () => {
   const months = 1;
 
   const result = calculateInvestment(
-    { annualInvestment: investment, expectedAnnualReturn: interest },
+    { investment: investment, expectedAnnualReturn: interest, investmentFrequency: AnnuallyOrMonthly.Anually},
     months
   );
 
@@ -32,7 +33,7 @@ test("Investing 10k (annual) over 2 months earns", () => {
   const months = 2;
 
   const result = calculateInvestment(
-    { annualInvestment: investment, expectedAnnualReturn: interest },
+    { investment: investment, expectedAnnualReturn: interest, investmentFrequency: AnnuallyOrMonthly.Anually },
     months
   );
 
@@ -53,7 +54,7 @@ test("Investing 10k (annual) over 36 months earns", () => {
   const months = 36;
 
   const result = calculateInvestment(
-    { annualInvestment: investment, expectedAnnualReturn: interest },
+    { investment: investment, expectedAnnualReturn: interest, investmentFrequency: AnnuallyOrMonthly.Anually },
     months
   );
 

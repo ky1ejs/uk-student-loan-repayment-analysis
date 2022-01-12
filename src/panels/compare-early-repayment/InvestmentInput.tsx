@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import MonthSelector from "../../components/MonthSelector";
+import AnnuallyOrMonthlySelector from "../../components/AnnuallyOrMonthlySelector";
 import PoundTextField from "../../components/PoundTextField";
 import Section from "../../components/Section";
 import InvestmentConfig from "../../types/InvestmentConfig";
-import PaymentSchedule from "../../types/PaymentSchedule";
-import parsePercentage from "../../util/parse-percentage";
-import parsePound from "../../util/parse-pound";
+import AnnuallyOrMonthly from "../../types/AnnuallyOrMonthly";
+import { stringToPercentage, percentageToString } from "../../util/parse-percentage";
+import { stringToPennies, penniesToString } from "../../util/parse-pound";
 import PercentageInput from "./PercentageInput";
 import styled from "styled-components";
 
@@ -18,45 +18,44 @@ const InputRow = styled.div`
   margin: 24px 0;
 `;
 
-interface InvetmentInputProps {
-  didUpdateInvestmentConfig: (config?: InvestmentConfig) => void;
+interface InvestmentConfigInputs {
+  investment: string;
+  expectedAnnualReturn: string;
+  investmentFrequency: AnnuallyOrMonthly
 }
 
-interface InvestmentConfigInputs {
-  annualInvestment: string;
-  expectedAnnualReturn: string;
+interface InvetmentInputProps {
+  didUpdateInvestmentConfig: (config?: InvestmentConfig) => void;
+  initialValues: Partial<InvestmentConfig>
 }
 
 const InvestmentInput = ({
   didUpdateInvestmentConfig,
+  initialValues
 }: InvetmentInputProps) => {
-  const [paymentSchedule, setPaymentSchedule] = React.useState(
-    PaymentSchedule.Monthly
-  );
   const [config, setConfig] = React.useState<InvestmentConfigInputs>({
-    annualInvestment: "",
-    expectedAnnualReturn: "",
+    investment: penniesToString(initialValues.investment) ?? "",
+    expectedAnnualReturn: percentageToString(initialValues.expectedAnnualReturn) ?? "",
+    investmentFrequency: initialValues.investmentFrequency ?? AnnuallyOrMonthly.Monthly
   });
 
   useEffect(() => {
-    const annualInvestment = parsePound(config.annualInvestment);
-    const expectedAnnualReturn = parsePercentage(config.expectedAnnualReturn);
+    const investment = stringToPennies(config.investment);
+    const expectedAnnualReturn = stringToPercentage(config.expectedAnnualReturn);
 
-    if (annualInvestment && expectedAnnualReturn) {
+    if (investment && expectedAnnualReturn) {
       didUpdateInvestmentConfig({
-        annualInvestment:
-          paymentSchedule === PaymentSchedule.Monthly
-            ? annualInvestment * 12
-            : annualInvestment,
-        expectedAnnualReturn: expectedAnnualReturn,
+        investment,
+        expectedAnnualReturn,
+        investmentFrequency: config.investmentFrequency
       });
     } else {
       didUpdateInvestmentConfig(undefined);
     }
-  }, [config, paymentSchedule]);
+  }, [config]);
 
   const handleInvestmentChange = (value: string) => {
-    setConfig({ ...config, annualInvestment: value });
+    setConfig({ ...config, investment: value });
   };
 
   const handleReturnChange = (value: string) => {
@@ -71,12 +70,13 @@ const InvestmentInput = ({
           <PoundTextField
             id="repayment"
             label="Repayment"
-            value={config.annualInvestment}
+            value={config.investment}
+            fullWidth
             onChange={handleInvestmentChange}
           />
-          <MonthSelector
-            initialSelection={paymentSchedule}
-            onChange={setPaymentSchedule}
+          <AnnuallyOrMonthlySelector
+            initialSelection={config.investmentFrequency}
+            onChange={(investmentFrequency) => setConfig({...config, investmentFrequency})}
           />
         </Flex>
       </InputRow>
