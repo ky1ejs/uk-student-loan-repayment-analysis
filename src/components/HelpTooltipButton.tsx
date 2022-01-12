@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Help } from "@mui/icons-material";
 import { ClickAwayListener, IconButton, Tooltip } from "@mui/material";
+import styled from "styled-components";
+
+const Container = styled.div`
+  a:visited { 
+    color: wheat;
+  }
+`
 
 const HelpTooltipButton = ({ children }: { children?: React.ReactNode }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -15,7 +22,7 @@ const HelpTooltipButton = ({ children }: { children?: React.ReactNode }) => {
         <Tooltip
           arrow
           open={tooltipOpen}
-          title={<React.Fragment>{children}</React.Fragment>}
+          title={<Container>{children}</Container>}
         >
           <Help />
         </Tooltip>
