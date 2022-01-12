@@ -1,3 +1,4 @@
+import AnnuallyOrMonthly from "../types/AnnuallyOrMonthly";
 import InvestmentConfig from "../types/InvestmentConfig";
 
 const MONTHS_IN_YEAR = 12;
@@ -37,7 +38,7 @@ export function calculateLoanRepayment(
     return { repayments: [], totalInterest: 0, totalMonths: 0 };
   }
   const monthlySalaryRepayment =
-    ((config.salary - config.repaymentThreshold) / 12) *
+    ((config.salary - config.repaymentThreshold) / MONTHS_IN_YEAR) *
     config.repaymentPercentage;
 
   let { debt: remainingDebt } = config;
@@ -51,7 +52,7 @@ export function calculateLoanRepayment(
 
   while (remainingDebt > 0) {
     // Add interest
-    const interestedAcrued = (remainingDebt * config.interest) / 12;
+    const interestedAcrued = (remainingDebt * config.interest) / MONTHS_IN_YEAR;
     remainingDebt += interestedAcrued;
 
     // Make salary repayment
@@ -62,7 +63,7 @@ export function calculateLoanRepayment(
     if (config.extraAnnualRepayment && config.extraAnnualRepayment > 0) {
       remainingDebt = Math.max(
         0,
-        remainingDebt - config.extraAnnualRepayment / 12
+        remainingDebt - config.extraAnnualRepayment / MONTHS_IN_YEAR
       );
     }
 
@@ -120,9 +121,9 @@ export function calculateInvestment(
   investment: InvestmentConfig,
   months: number
 ): InvestmentPerformance {
-  const { investment: invest, expectedAnnualReturn: interest } =
+  const { investment: invest, expectedAnnualReturn: interest, investmentFrequency } =
     investment;
-  const monthlyInvestment = invest / MONTHS_IN_YEAR;
+  const monthlyInvestment = investmentFrequency === AnnuallyOrMonthly.Anually ? invest / MONTHS_IN_YEAR : invest;
 
   const investmentMonths: InvestmentMonth[] = [];
   let balance = 0;
