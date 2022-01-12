@@ -1,20 +1,35 @@
 import { Card as MuiCard, CardContent, Typography } from "@mui/material";
 import React from "react";
+import styled from "styled-components";
 
 interface CardProps {
   title: string;
   children?: React.ReactNode;
+  bgColor: string;
 }
 
-const Card = ({ title, children }: CardProps) => (
-  <MuiCard sx={{ minWidth: 275 }}>
-    <CardContent>
+const StyledMuiCard = styled(MuiCard)`
+  min-width: 275px;
+
+  @media only screen and (min-width: 701px) {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+`;
+
+const StyledCardContent = styled(CardContent)<{ bgColor: string }>`
+  background-color: ${(props) => props.bgColor};
+`;
+
+const Card = ({ title, children, bgColor }: CardProps) => (
+  <StyledMuiCard>
+    <StyledCardContent bgColor={bgColor}>
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
         {title}
       </Typography>
       {children}
-    </CardContent>
-  </MuiCard>
+    </StyledCardContent>
+  </StyledMuiCard>
 );
 
 export default Card;

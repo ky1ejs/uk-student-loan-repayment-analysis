@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../../components/Card";
+import Bold from "../../components/Bold";
 import RepaymentAndInvestment from "../../types/RepaymentAndInvestment";
 import formatter from "../../util/currency-formatter";
 
@@ -8,7 +8,7 @@ interface ComparisonResultCardProps {
   earlyRepayment: RepaymentAndInvestment;
 }
 
-const ComparisonResultCard = ({
+const ComparisonResult = ({
   repaymentAndInvestment: { investment, earlyRepayment },
 }: {
   repaymentAndInvestment: ComparisonResultCardProps;
@@ -19,21 +19,21 @@ const ComparisonResultCard = ({
     (earlyRepayment.investmentPerformance.interestEarned -
       earlyRepayment.loanRepayment.totalInterest);
   return (
-    <Card title="Result">
+    <p>
       {comparison > 0 ? (
         <>
-          <p>Focus on Investment!</p>
-          You'll be {formatter.format(comparison / 100)} better off.
+          Focus on Investment! You'll be{" "}
+          <Bold>{formatter.format(comparison / 100)} better off</Bold>.
         </>
       ) : (
         <>
-          <p>Repay Early!</p>
-          You'll be {formatter.format(Math.abs(comparison / 100))} better off.
+          Repay Early! You'll be{" "}
+          <Bold>{formatter.format(Math.abs(comparison / 100))} better off</Bold>
+          .
         </>
       )}
-      {/* If you used the your investment money you'd repay your loan in {compareResult.repayments.length} years ({result.repayments.length - compareResult.repayments.length} years early), saving {formatter.format((result.totalInterest - compareResult.totalInterest) / 100)} in interest. */}
-    </Card>
+    </p>
   );
 };
 
-export default ComparisonResultCard;
+export default ComparisonResult;

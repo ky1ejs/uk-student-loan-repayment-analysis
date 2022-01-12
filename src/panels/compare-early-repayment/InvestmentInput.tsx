@@ -44,7 +44,10 @@ const InvestmentInput = ({
 
     if (annualInvestment && expectedAnnualReturn) {
       didUpdateInvestmentConfig({
-        annualInvestment: paymentSchedule === PaymentSchedule.Monthly ? annualInvestment * 12 : annualInvestment,
+        annualInvestment:
+          paymentSchedule === PaymentSchedule.Monthly
+            ? annualInvestment * 12
+            : annualInvestment,
         expectedAnnualReturn: expectedAnnualReturn,
       });
     } else {
@@ -80,7 +83,7 @@ const InvestmentInput = ({
       <InputRow>
         <PercentageInput
           id="return"
-          label="Return"
+          label="Return (YoY)"
           value={config.expectedAnnualReturn}
           onChange={handleReturnChange}
           fullWidth

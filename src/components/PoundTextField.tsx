@@ -9,7 +9,7 @@ interface PoundTextFieldProps {
   value: string;
   fullWidth?: boolean;
   tooltip?: React.ReactNode;
-  hint?: React.ReactNode
+  hint?: React.ReactNode;
 }
 
 const PoundTextField = ({
@@ -19,7 +19,7 @@ const PoundTextField = ({
   value,
   fullWidth,
   tooltip,
-  hint
+  hint,
 }: PoundTextFieldProps) => (
   <TextField
     id={id}

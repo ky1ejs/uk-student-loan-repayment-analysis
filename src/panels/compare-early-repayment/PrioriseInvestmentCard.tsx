@@ -3,12 +3,16 @@ import Card from "../../components/Card";
 import RepaymentAndInvestment from "../../types/RepaymentAndInvestment";
 import formatter from "../../util/currency-formatter";
 
+interface PrioritiseInvestmentCardProps {
+  repaymentAndInvestment: RepaymentAndInvestment;
+  bgColor: string;
+}
+
 const PrioritiseInvestmentCard = ({
   repaymentAndInvestment: { loanRepayment, investmentPerformance },
-}: {
-  repaymentAndInvestment: RepaymentAndInvestment;
-}) => (
-  <Card title="Prioritise Investing">
+  bgColor,
+}: PrioritiseInvestmentCardProps) => (
+  <Card bgColor={bgColor} title="Prioritising Investment">
     <p>{loanRepayment.repayments.length} years repaying &amp; investing</p>
     <p>
       {formatter.format(loanRepayment.totalInterest / 100)} loan interest cost

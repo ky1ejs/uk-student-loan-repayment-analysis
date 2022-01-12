@@ -1,10 +1,9 @@
 import React from "react";
 import Section from "../../components/Section";
-import Flex from "../../components/Flex";
 import RepaymentAndInvestment from "../../types/RepaymentAndInvestment";
 import PrioritiseInvestmentCard from "./PrioriseInvestmentCard";
 import PrioritiseRepaymentCard from "./PrioritiseRepaymentCard";
-import ComparisonResultCard from "./ComparisonResultCard";
+import ComparisonResultCard from "./ComparisonResult";
 import InvestmentConfig from "../../types/InvestmentConfig";
 import {
   calculateInvestment,
@@ -12,6 +11,16 @@ import {
   LoanConfig,
   LoanRepaymentResult,
 } from "../../analysis";
+import styled from "styled-components";
+
+const Flex = styled.div`
+  display: flex;
+  gap: 24px;
+
+  @media only screen and (max-width: 700px) {
+    flex-direction: column;
+  }
+`;
 
 interface EarlyRepaymentVsInvestmentAnalysisResultProps {
   loanRepayment: LoanRepaymentResult;
@@ -44,17 +53,45 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
     loanRepayment: earlyLoanReplayment,
   };
 
+  const comparison =
+    investment.investmentPerformance.interestEarned -
+    investment.loanRepayment.totalInterest -
+    (repayment.investmentPerformance.interestEarned -
+      repayment.loanRepayment.totalInterest);
+
+  const red = "#ffd2cb";
+  const green = "#87ffd0";
+
   return (
     <Section>
       <h2>Result</h2>
+      <ComparisonResultCard
+        repaymentAndInvestment={{ investment, earlyRepayment: repayment }}
+      />
       <Flex>
-        <PrioritiseInvestmentCard repaymentAndInvestment={investment} />
-        <div>vs</div>
-        <PrioritiseRepaymentCard repaymentAndInvestment={repayment} />
-        <div>=</div>
-        <ComparisonResultCard
-          repaymentAndInvestment={{ investment, earlyRepayment: repayment }}
-        />
+        {comparison > 0 ? (
+          <>
+            <PrioritiseInvestmentCard
+              bgColor={green}
+              repaymentAndInvestment={investment}
+            />
+            <PrioritiseRepaymentCard
+              bgColor={red}
+              repaymentAndInvestment={repayment}
+            />
+          </>
+        ) : (
+          <>
+            <PrioritiseRepaymentCard
+              bgColor={green}
+              repaymentAndInvestment={repayment}
+            />
+            <PrioritiseInvestmentCard
+              bgColor={red}
+              repaymentAndInvestment={investment}
+            />
+          </>
+        )}
       </Flex>
     </Section>
   );
