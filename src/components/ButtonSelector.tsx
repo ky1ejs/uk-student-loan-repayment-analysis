@@ -20,7 +20,7 @@ function ButtonSelector<T>(props: ButtonSelectorProps<T>) {
   );
 
   const handleChange = (event: React.MouseEvent<HTMLElement>, selection: T) => {
-    if (selection === selectedValue || selection === null) return
+    if (selection === selectedValue || selection === null) return;
     setSelectedValue(selection);
     onChange(selection);
   };
