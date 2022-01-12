@@ -4,10 +4,11 @@ import { ClickAwayListener, IconButton, Tooltip } from "@mui/material";
 import styled from "styled-components";
 
 const Container = styled.div`
-  a:visited { 
+  font-size: 10pt;
+  a:visited {
     color: wheat;
   }
-`
+`;
 
 const HelpTooltipButton = ({ children }: { children?: React.ReactNode }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
