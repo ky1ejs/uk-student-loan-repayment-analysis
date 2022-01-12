@@ -11,6 +11,7 @@ import HelpTooltipButton from "./components/HelpTooltipButton";
 import parsePound from "./util/parse-pound";
 import parsePercentage from "./util/parse-percentage";
 import DateAdapter from "@mui/lab/AdapterMoment";
+import moment from "moment";
 
 const Flex = styled.div`
   display: flex;
@@ -249,7 +250,14 @@ const ConfigInput = ({
           views={["year", "month"]}
           value={dateLeftUniversity}
           onChange={setDateLeftUniversity}
-          renderInput={(params) => <TextField {...params} />}
+          inputFormat="M/yyyy"
+          renderInput={(params) => (
+            <TextField
+              fullWidth
+              {...params}
+              helperText={moment(dateLeftUniversity).format("MMMM yyyy")}
+            />
+          )}
         />
       </LocalizationProvider>
     </>
