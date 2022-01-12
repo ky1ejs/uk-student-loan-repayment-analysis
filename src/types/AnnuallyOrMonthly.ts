@@ -1,4 +1,3 @@
-
 enum AnnuallyOrMonthly {
   Anually,
   Monthly,

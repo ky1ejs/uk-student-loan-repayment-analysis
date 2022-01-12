@@ -1,4 +1,3 @@
-
 export const stringToPercentage = (value?: string) => {
   if (!value) return undefined;
   const interestString = parseFloat(value);
@@ -6,5 +5,5 @@ export const stringToPercentage = (value?: string) => {
 };
 
 export const percentageToString = (value?: number) => {
-  return value ? (value * 100).toString() : undefined
-}
+  return value ? (value * 100).toString() : undefined;
+};

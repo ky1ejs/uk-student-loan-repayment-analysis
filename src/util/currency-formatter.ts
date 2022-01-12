@@ -1,6 +1,10 @@
-const formatter = Intl.NumberFormat("en-GB", {
+const f = Intl.NumberFormat("en-GB", {
   style: "currency",
   currency: "GBP",
 });
 
-export default formatter;
+const formatPennies = (p: number) => {
+  return f.format(p / 100);
+};
+
+export default formatPennies;

@@ -12,6 +12,7 @@ import {
   LoanRepaymentResult,
 } from "../../analysis";
 import styled from "styled-components";
+import AnnuallyOrMonthly from "../../types/AnnuallyOrMonthly";
 
 const Flex = styled.div`
   display: flex;
@@ -43,21 +44,31 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
 
   const earlyLoanReplayment = calculateLoanRepayment({
     ...loanConfig,
-    extraAnnualRepayment: investmentConfig.investment,
+    extraAnnualRepayment:
+      investmentConfig.investmentFrequency === AnnuallyOrMonthly.Monthly
+        ? investmentConfig.investment * 12
+        : investmentConfig.investment,
   });
   const repayment: RepaymentAndInvestment = {
     investmentPerformance: calculateInvestment(
-      investmentConfig,
+      {
+        ...investmentConfig,
+        investment:
+          investmentConfig.investment +
+          earlyLoanReplayment.monthlySalaryPayment,
+      },
       loanRepayment.totalMonths - earlyLoanReplayment.totalMonths
     ),
     loanRepayment: earlyLoanReplayment,
   };
 
+  console.log(repayment.loanRepayment);
+
   const comparison =
-    investment.investmentPerformance.interestEarned -
-    investment.loanRepayment.totalInterest -
-    (repayment.investmentPerformance.interestEarned -
-      repayment.loanRepayment.totalInterest);
+    investment.investmentPerformance.balance -
+    investment.loanRepayment.totalPayments -
+    (repayment.investmentPerformance.balance -
+      repayment.loanRepayment.totalPayments);
 
   const red = "#ffd2cb";
   const green = "#87ffd0";
@@ -65,9 +76,7 @@ const EarlyRepaymentVsInvestmentAnalysisResult = ({
   return (
     <Section>
       <h2>Result</h2>
-      <ComparisonResultCard
-        repaymentAndInvestment={{ investment, earlyRepayment: repayment }}
-      />
+      <ComparisonResultCard comparisonResult={comparison} />
       <Flex>
         {comparison > 0 ? (
           <>

@@ -22,8 +22,12 @@ const Content = styled.div`
 `;
 
 const App = () => {
-  const [loanConfig, setLoanConfig] = useState<LoanConfig | undefined>(undefined);
-  const [investmentConfig, setInvestmentConfig] = useState<InvestmentConfig | undefined>(undefined);
+  const [loanConfig, setLoanConfig] = useState<LoanConfig | undefined>(
+    undefined
+  );
+  const [investmentConfig, setInvestmentConfig] = useState<
+    InvestmentConfig | undefined
+  >(undefined);
 
   return (
     <CssBaseline>
@@ -39,7 +43,13 @@ const App = () => {
           <Section>
             <ConfigInput onConfigSet={setLoanConfig} />
           </Section>
-          <Section><Tabs loanConfig={loanConfig} investmentConfig={investmentConfig} setInvestmentConfig={setInvestmentConfig} /></Section>
+          <Section>
+            <Tabs
+              loanConfig={loanConfig}
+              investmentConfig={investmentConfig}
+              setInvestmentConfig={setInvestmentConfig}
+            />
+          </Section>
         </Content>
         <Footer />
       </Page>

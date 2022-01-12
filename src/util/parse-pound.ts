@@ -5,5 +5,5 @@ export const stringToPennies = (value?: string) => {
 };
 
 export const penniesToString = (value?: number) => {
-  return value ? (value / 100).toString() : undefined
-}
+  return value ? (value / 100).toString() : undefined;
+};

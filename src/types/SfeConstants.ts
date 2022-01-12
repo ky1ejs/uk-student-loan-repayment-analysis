@@ -1,0 +1,9 @@
+const SfeConstants = {
+  MAX_REPAYMENT_YEARS: 30,
+  PLAN_1_REPAYMENT_THRESHOLD: "19895",
+  PLAN_2_REPAYMENT_THRESHOLD: "27295",
+  SALARY_PERCENTAGE: "9",
+  INTEREST: "1.5",
+};
+
+export default SfeConstants;

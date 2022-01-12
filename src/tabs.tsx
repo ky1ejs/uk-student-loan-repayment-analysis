@@ -7,16 +7,26 @@ import RepaymentSchedule from "./panels/repayment-schedule";
 import InvestmentConfig from "./types/InvestmentConfig";
 import ResultsPlaceholder from "./panels/compare-early-repayment/ResultsPlaceholder";
 
-interface TabsProps { loanConfig?: LoanConfig, investmentConfig?: InvestmentConfig, setInvestmentConfig: (c?: InvestmentConfig) => void }
+interface TabsProps {
+  loanConfig?: LoanConfig;
+  investmentConfig?: InvestmentConfig;
+  setInvestmentConfig: (c?: InvestmentConfig) => void;
+}
 
-const Tabs = ({ loanConfig, investmentConfig, setInvestmentConfig }: TabsProps) => {
+const Tabs = ({
+  loanConfig,
+  investmentConfig,
+  setInvestmentConfig,
+}: TabsProps) => {
   const [currentTab, setCurrentTab] = React.useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, value: number) => {
     setCurrentTab(value);
   };
 
-  const loanRepayment = loanConfig ? calculateLoanRepayment(loanConfig) : undefined;
+  const loanRepayment = loanConfig
+    ? calculateLoanRepayment(loanConfig)
+    : undefined;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -32,15 +42,23 @@ const Tabs = ({ loanConfig, investmentConfig, setInvestmentConfig }: TabsProps) 
       </Box>
 
       <TabPanel currentTab={currentTab} index={0}>
-        {loanRepayment ? <RepaymentSchedule repayment={loanRepayment} /> : <ResultsPlaceholder/>}
+        {loanRepayment ? (
+          <RepaymentSchedule repayment={loanRepayment} />
+        ) : (
+          <ResultsPlaceholder />
+        )}
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
-        {loanConfig && loanRepayment ? <CompareEarlyRepaymentWithInvestment
-          loanRepayment={loanRepayment}
-          loanConfig={loanConfig}
-          investmentConfig={investmentConfig}
-          setInvestmentConfig={setInvestmentConfig}
-        /> : <ResultsPlaceholder/>}
+        {loanConfig && loanRepayment ? (
+          <CompareEarlyRepaymentWithInvestment
+            loanRepayment={loanRepayment}
+            loanConfig={loanConfig}
+            investmentConfig={investmentConfig}
+            setInvestmentConfig={setInvestmentConfig}
+          />
+        ) : (
+          <ResultsPlaceholder />
+        )}
       </TabPanel>
     </Box>
   );

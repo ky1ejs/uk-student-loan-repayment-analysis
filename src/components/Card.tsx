@@ -17,13 +17,13 @@ const StyledMuiCard = styled(MuiCard)`
   }
 `;
 
-const StyledCardContent = styled(CardContent)<{ bgColor: string }>`
-  background-color: ${(props) => props.bgColor};
+const StyledCardContent = styled(CardContent)<{ bgcolor: string }>`
+  background-color: ${(props) => props.bgcolor};
 `;
 
 const Card = ({ title, children, bgColor }: CardProps) => (
   <StyledMuiCard>
-    <StyledCardContent bgColor={bgColor}>
+    <StyledCardContent bgcolor={bgColor}>
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
         {title}
       </Typography>

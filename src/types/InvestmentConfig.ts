@@ -3,7 +3,7 @@ import AnnuallyOrMonthly from "./AnnuallyOrMonthly";
 interface InvestmentConfig {
   investment: number;
   expectedAnnualReturn: number;
-  investmentFrequency: AnnuallyOrMonthly
+  investmentFrequency: AnnuallyOrMonthly;
 }
 
 export default InvestmentConfig;

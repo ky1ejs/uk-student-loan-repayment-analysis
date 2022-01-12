@@ -12,6 +12,7 @@ import { stringToPennies } from "./util/parse-pound";
 import { stringToPercentage } from "./util/parse-percentage";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import moment from "moment";
+import SfeConstants from "./types/SfeConstants";
 
 const Flex = styled.div`
   display: flex;
@@ -39,14 +40,15 @@ const ConfigInput = ({
     salary: "",
     repaymentThreshold: "",
     debt: "",
-    interest: "1.5",
-    repaymentPercentage: "9",
+    interest: SfeConstants.INTEREST,
+    repaymentPercentage: SfeConstants.SALARY_PERCENTAGE,
   });
   const [paymentSchedule, setPaymentSchedule] = React.useState(
     AnnuallyOrMonthly.Anually
   );
-  const [dateLeftUniversity, setDateLeftUniversity] =
-    React.useState<Date | null>(new Date());
+  const [dateLeftUniversity, setDateLeftUniversity] = React.useState<Date>(
+    new Date()
+  );
 
   useEffect(() => {
     const debt = stringToPennies(config.debt);
@@ -69,6 +71,7 @@ const ConfigInput = ({
         repaymentThreshold,
         interest,
         repaymentPercentage,
+        monthAfterLeavingUni: dateLeftUniversity,
       });
     } else {
       onConfigSet(undefined);
@@ -105,11 +108,17 @@ const ConfigInput = ({
   };
 
   const selectPlan1Threshold = () => {
-    setConfig({ ...config, repaymentThreshold: "19895" });
+    setConfig({
+      ...config,
+      repaymentThreshold: SfeConstants.PLAN_1_REPAYMENT_THRESHOLD,
+    });
   };
 
   const selectPlan2Threshold = () => {
-    setConfig({ ...config, repaymentThreshold: "27295" });
+    setConfig({
+      ...config,
+      repaymentThreshold: SfeConstants.PLAN_2_REPAYMENT_THRESHOLD,
+    });
   };
 
   return (
@@ -231,7 +240,8 @@ const ConfigInput = ({
           fullWidth
           tooltip={
             <div>
-              This has been 9% for quite some time. Double check this value{" "}
+              This has been {SfeConstants.SALARY_PERCENTAGE}% for quite some
+              time. Double check this value{" "}
               <a
                 target="_blank"
                 href="https://www.gov.uk/repaying-your-student-loan/what-you-pay"
@@ -250,7 +260,7 @@ const ConfigInput = ({
           openTo="year"
           views={["year", "month"]}
           value={dateLeftUniversity}
-          onChange={setDateLeftUniversity}
+          onChange={(d) => setDateLeftUniversity(d ?? new Date())}
           inputFormat="M/yyyy"
           reduceAnimations
           renderInput={(params) => (

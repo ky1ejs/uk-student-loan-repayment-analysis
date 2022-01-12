@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "../../components/Card";
 import RepaymentAndInvestment from "../../types/RepaymentAndInvestment";
-import formatter from "../../util/currency-formatter";
+import formatPennies from "../../util/currency-formatter";
 
 interface PrioritiseInvestmentCardProps {
   repaymentAndInvestment: RepaymentAndInvestment;
@@ -13,18 +13,18 @@ const PrioritiseInvestmentCard = ({
   bgColor,
 }: PrioritiseInvestmentCardProps) => (
   <Card bgColor={bgColor} title="Prioritising Investment">
-    <p>{loanRepayment.repayments.length} years repaying &amp; investing</p>
+    <p>{loanRepayment.payments.length} years repaying whilst investing</p>
     <p>
-      {formatter.format(loanRepayment.totalInterest / 100)} loan interest cost
+      {formatPennies(loanRepayment.totalPayments)} paid to SFE (
+      {formatPennies(loanRepayment.totalInterestPaid)} interest)
     </p>
     <p>
-      {formatter.format(investmentPerformance.interestEarned / 100)} investment
-      interest earned
+      {formatPennies(investmentPerformance.balance)} in your savings (
+      {formatPennies(investmentPerformance.interestEarned)} earned in interest)
     </p>
     <p>
-      {formatter.format(
-        (investmentPerformance.interestEarned - loanRepayment.totalInterest) /
-          100
+      {formatPennies(
+        investmentPerformance.interestEarned - loanRepayment.totalInterestPaid
       )}{" "}
       balance
     </p>

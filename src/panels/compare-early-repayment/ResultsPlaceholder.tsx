@@ -14,9 +14,7 @@ const Container = styled.div`
 
 const ResultsPlaceholder = () => (
   <Container>
-    <Centered>
-      Update the information above to see the results!
-    </Centered>
+    <Centered>Update the information above to see the results!</Centered>
   </Container>
 );
 

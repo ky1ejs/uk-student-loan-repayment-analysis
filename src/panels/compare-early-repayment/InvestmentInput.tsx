@@ -4,7 +4,10 @@ import PoundTextField from "../../components/PoundTextField";
 import Section from "../../components/Section";
 import InvestmentConfig from "../../types/InvestmentConfig";
 import AnnuallyOrMonthly from "../../types/AnnuallyOrMonthly";
-import { stringToPercentage, percentageToString } from "../../util/parse-percentage";
+import {
+  stringToPercentage,
+  percentageToString,
+} from "../../util/parse-percentage";
 import { stringToPennies, penniesToString } from "../../util/parse-pound";
 import PercentageInput from "./PercentageInput";
 import styled from "styled-components";
@@ -21,33 +24,37 @@ const InputRow = styled.div`
 interface InvestmentConfigInputs {
   investment: string;
   expectedAnnualReturn: string;
-  investmentFrequency: AnnuallyOrMonthly
+  investmentFrequency: AnnuallyOrMonthly;
 }
 
 interface InvetmentInputProps {
   didUpdateInvestmentConfig: (config?: InvestmentConfig) => void;
-  initialValues: Partial<InvestmentConfig>
+  initialValues: Partial<InvestmentConfig>;
 }
 
 const InvestmentInput = ({
   didUpdateInvestmentConfig,
-  initialValues
+  initialValues,
 }: InvetmentInputProps) => {
   const [config, setConfig] = React.useState<InvestmentConfigInputs>({
     investment: penniesToString(initialValues.investment) ?? "",
-    expectedAnnualReturn: percentageToString(initialValues.expectedAnnualReturn) ?? "",
-    investmentFrequency: initialValues.investmentFrequency ?? AnnuallyOrMonthly.Monthly
+    expectedAnnualReturn:
+      percentageToString(initialValues.expectedAnnualReturn) ?? "",
+    investmentFrequency:
+      initialValues.investmentFrequency ?? AnnuallyOrMonthly.Monthly,
   });
 
   useEffect(() => {
     const investment = stringToPennies(config.investment);
-    const expectedAnnualReturn = stringToPercentage(config.expectedAnnualReturn);
+    const expectedAnnualReturn = stringToPercentage(
+      config.expectedAnnualReturn
+    );
 
     if (investment && expectedAnnualReturn) {
       didUpdateInvestmentConfig({
         investment,
         expectedAnnualReturn,
-        investmentFrequency: config.investmentFrequency
+        investmentFrequency: config.investmentFrequency,
       });
     } else {
       didUpdateInvestmentConfig(undefined);
@@ -76,7 +83,9 @@ const InvestmentInput = ({
           />
           <AnnuallyOrMonthlySelector
             initialSelection={config.investmentFrequency}
-            onChange={(investmentFrequency) => setConfig({...config, investmentFrequency})}
+            onChange={(investmentFrequency) =>
+              setConfig({ ...config, investmentFrequency })
+            }
           />
         </Flex>
       </InputRow>

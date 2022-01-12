@@ -1,6 +1,6 @@
 import React from "react";
 import { GridRowsProp, GridColDef, DataGrid } from "@mui/x-data-grid";
-import formatter from "../util/currency-formatter";
+import formatPennies from "../util/currency-formatter";
 import { LoanRepaymentResult } from "../analysis";
 
 const LoanRepaymentTable = ({
@@ -8,20 +8,22 @@ const LoanRepaymentTable = ({
 }: {
   loanRepayments: LoanRepaymentResult;
 }) => {
-  const rows: GridRowsProp = loanRepayments.repayments.map((r, i) => {
+  const rows: GridRowsProp = loanRepayments.payments.map((r, i) => {
     return {
       id: i + 1,
-      col1: formatter.format(r.balance / 100),
-      col2: formatter.format(r.totalRepayments / 100),
-      col3: formatter.format(r.totalInterest / 100),
+      col1: formatPennies(r.balance),
+      col2: formatPennies(r.totalPayments),
+      col3: formatPennies(r.totalInterest),
+      col4: formatPennies(r.totalInterestToDate),
     };
   });
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "#", width: 25 },
-    { field: "col1", headerName: "Balance", width: 150 },
-    { field: "col2", headerName: "Repayment", width: 150 },
-    { field: "col3", headerName: "Interest", width: 150 },
+    { field: "id", headerName: "Year", width: 70 },
+    { field: "col1", headerName: "Balance", width: 120 },
+    { field: "col2", headerName: "Repayment", width: 120 },
+    { field: "col3", headerName: "Interest", width: 120 },
+    { field: "col4", headerName: "Interest (YTD)", width: 140 },
   ];
 
   return (

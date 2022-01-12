@@ -1,12 +1,19 @@
 import React from "react";
 import Card from "../../components/Card";
 import RepaymentAndInvestment from "../../types/RepaymentAndInvestment";
-import formatter from "../../util/currency-formatter";
+import formatPennies from "../../util/currency-formatter";
 
 interface PrioritiseRepaymentCardProps {
   repaymentAndInvestment: RepaymentAndInvestment;
   bgColor: string;
 }
+
+const monthsOrYears = (months: number) => {
+  const years = Math.floor(months / 12);
+  const unit = years > 0 ? years : months;
+  const unitName = years > 0 ? "year" : "month";
+  return `${unit} ${unitName}${unit > 1 ? "s" : ""}`;
+};
 
 const PrioritiseRepaymentCard = ({
   repaymentAndInvestment: { loanRepayment, investmentPerformance },
@@ -14,21 +21,20 @@ const PrioritiseRepaymentCard = ({
 }: PrioritiseRepaymentCardProps) => (
   <Card bgColor={bgColor} title="Prioritising Loan Repayment">
     <p>
-      {loanRepayment.repayments.length} years repaying, then{" "}
-      {Math.floor(investmentPerformance.investmentMonths.length / 12)} years
-      investing
+      {loanRepayment.payments.length} years repaying followed by{" "}
+      {monthsOrYears(investmentPerformance.investmentMonths.length)} investing
     </p>
     <p>
-      {formatter.format(loanRepayment.totalInterest / 100)} loan interest cost
+      {formatPennies(loanRepayment.totalPayments)} paid to SFE (
+      {formatPennies(loanRepayment.totalInterestPaid)} interest)
     </p>
     <p>
-      {formatter.format(investmentPerformance.interestEarned / 100)} investment
-      interest earned
+      {formatPennies(investmentPerformance.balance)} in your savings (
+      {formatPennies(investmentPerformance.interestEarned)} earned in interest)
     </p>
     <p>
-      {formatter.format(
-        (investmentPerformance.interestEarned - loanRepayment.totalInterest) /
-          100
+      {formatPennies(
+        investmentPerformance.interestEarned - loanRepayment.totalInterestPaid
       )}{" "}
       balance
     </p>
